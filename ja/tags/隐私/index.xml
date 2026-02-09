@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>隐私 on Hugo Theme Stack</title>
-        <link>http://localhost:1313/ja/tags/%E9%9A%90%E7%A7%81/</link>
-        <description>Recent content in 隐私 on Hugo Theme Stack</description>
+        <title>隐私 on impself小破站</title>
+        <link>https://impself.github.io/ja/tags/%E9%9A%90%E7%A7%81/</link>
+        <description>Recent content in 隐私 on impself小破站</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>ja</language>
-        <lastBuildDate>Mon, 26 Jan 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/ja/tags/%E9%9A%90%E7%A7%81/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 26 Jan 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://impself.github.io/ja/tags/%E9%9A%90%E7%A7%81/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>ショートコード</title>
-        <link>http://localhost:1313/ja/p/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%B3%E3%83%BC%E3%83%89/</link>
+        <link>https://impself.github.io/ja/p/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%B3%E3%83%BC%E3%83%89/</link>
         <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
         
-        <guid>http://localhost:1313/ja/p/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%B3%E3%83%BC%E3%83%89/</guid>
+        <guid>https://impself.github.io/ja/p/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%B3%E3%83%BC%E3%83%89/</guid>
         <description>&lt;p&gt;Stack テーマには、コンテンツを強化するためのカスタムショートコードがいくつか用意されています。&lt;/p&gt;
 &lt;h2 id=&#34;引用-quote&#34;&gt;引用 (Quote)
 &lt;/h2&gt;&lt;p&gt;&lt;code&gt;quote&lt;/code&gt; ショートコードを使用すると、著者、出典、URL を含む引用を表示できます。&lt;/p&gt;

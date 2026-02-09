@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Pages on Hugo 主題 Stack</title>
-        <link>http://localhost:1313/zh-hant-tw/page/</link>
-        <description>Recent content in Pages on Hugo 主題 Stack</description>
+        <title>Pages on impself小破站</title>
+        <link>https://impself.github.io/zh-hant-tw/page/</link>
+        <description>Recent content in Pages on impself小破站</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-hant-tw</language>
-        <lastBuildDate>Mon, 26 Jan 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/zh-hant-tw/page/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 26 Jan 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://impself.github.io/zh-hant-tw/page/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>關於</title>
-        <link>http://localhost:1313/zh-hant-tw/%E9%97%9C%E6%96%BC/</link>
+        <link>https://impself.github.io/zh-hant-tw/%E9%97%9C%E6%96%BC/</link>
         <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
         
-        <guid>http://localhost:1313/zh-hant-tw/%E9%97%9C%E6%96%BC/</guid>
+        <guid>https://impself.github.io/zh-hant-tw/%E9%97%9C%E6%96%BC/</guid>
         <description>&lt;h2 id=&#34;這是給誰看的&#34;&gt;這是給誰看的？
 &lt;/h2&gt;&lt;p&gt;這是一個示例&lt;strong&gt;關於&lt;/strong&gt;頁面。你可以用它來介紹你自己、你的博客或你的項目。&lt;/p&gt;
 &lt;h2 id=&#34;關於作者&#34;&gt;關於作者
@@ -44,26 +44,26 @@
         </item>
         <item>
         <title>歸檔</title>
-        <link>http://localhost:1313/zh-hant-tw/archives/</link>
+        <link>https://impself.github.io/zh-hant-tw/archives/</link>
         <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
         
-        <guid>http://localhost:1313/zh-hant-tw/archives/</guid>
+        <guid>https://impself.github.io/zh-hant-tw/archives/</guid>
         <description></description>
         </item>
         <item>
         <title>搜索</title>
-        <link>http://localhost:1313/zh-hant-tw/search/</link>
+        <link>https://impself.github.io/zh-hant-tw/search/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>http://localhost:1313/zh-hant-tw/search/</guid>
+        <guid>https://impself.github.io/zh-hant-tw/search/</guid>
         <description></description>
         </item>
         <item>
         <title>鏈接</title>
-        <link>http://localhost:1313/zh-hant-tw/%E9%8F%88%E6%8E%A5/</link>
+        <link>https://impself.github.io/zh-hant-tw/%E9%8F%88%E6%8E%A5/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>http://localhost:1313/zh-hant-tw/%E9%8F%88%E6%8E%A5/</guid>
+        <guid>https://impself.github.io/zh-hant-tw/%E9%8F%88%E6%8E%A5/</guid>
         <description>&lt;p&gt;要使用此功能，請在 frontmatter 中添加 &lt;code&gt;links&lt;/code&gt; 部分。&lt;/p&gt;
 &lt;p&gt;此頁面的 frontmatter：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;

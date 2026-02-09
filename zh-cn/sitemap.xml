@@ -2,314 +2,305 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://impself.github.io/</loc>
     <lastmod>2026-01-26T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/"
+                href="https://impself.github.io/en/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/"
+                href="https://impself.github.io/zh-hant-tw/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/"
+                href="https://impself.github.io/ja/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/"
+                href="https://impself.github.io/"
                 />
   </url><url>
-    <loc>http://localhost:1313/about/</loc>
-    <lastmod>2026-01-26T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/%E9%97%9C%E6%96%BC/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="ja"
-                href="http://localhost:1313/ja/%E3%81%93%E3%81%AE%E3%82%B5%E3%82%A4%E3%83%88%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="http://localhost:1313/about/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://impself.github.io/categories/</loc>
     <lastmod>2026-01-26T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/categories/"
+                href="https://impself.github.io/en/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/categories/"
+                href="https://impself.github.io/zh-hant-tw/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/categories/"
+                href="https://impself.github.io/ja/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/categories/"
+                href="https://impself.github.io/categories/"
                 />
   </url><url>
-    <loc>http://localhost:1313/categories/documentation/</loc>
+    <loc>https://impself.github.io/tags/gallery/</loc>
     <lastmod>2026-01-26T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/categories/documentation/"
+                href="https://impself.github.io/zh-hant-tw/tags/gallery/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/categories/documentation/"
+                href="https://impself.github.io/ja/tags/gallery/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/categories/documentation/"
+                href="https://impself.github.io/tags/gallery/"
                 />
   </url><url>
-    <loc>http://localhost:1313/tags/gallery/</loc>
+    <loc>https://impself.github.io/page/</loc>
     <lastmod>2026-01-26T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/tags/gallery/"
+                href="https://impself.github.io/zh-hant-tw/page/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/tags/gallery/"
+                href="https://impself.github.io/ja/page/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/tags/gallery/"
+                href="https://impself.github.io/page/"
                 />
   </url><url>
-    <loc>http://localhost:1313/p/image-gallery/</loc>
+    <loc>https://impself.github.io/tags/photoswipe/</loc>
     <lastmod>2026-01-26T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/p/image-gallery/"
+                href="https://impself.github.io/zh-hant-tw/tags/photoswipe/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/p/image-gallery/"
+                href="https://impself.github.io/ja/tags/photoswipe/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/p/image-gallery/"
+                href="https://impself.github.io/tags/photoswipe/"
                 />
   </url><url>
-    <loc>http://localhost:1313/page/</loc>
+    <loc>https://impself.github.io/post/</loc>
     <lastmod>2026-01-26T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/page/"
+                href="https://impself.github.io/zh-hant-tw/post/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/page/"
+                href="https://impself.github.io/ja/post/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/page/"
+                href="https://impself.github.io/post/"
                 />
   </url><url>
-    <loc>http://localhost:1313/tags/photoswipe/</loc>
-    <lastmod>2026-01-26T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/tags/photoswipe/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="ja"
-                href="http://localhost:1313/ja/tags/photoswipe/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="http://localhost:1313/tags/photoswipe/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/post/</loc>
-    <lastmod>2026-01-26T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/post/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="ja"
-                href="http://localhost:1313/ja/post/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="http://localhost:1313/post/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/tags/privacy/</loc>
-    <lastmod>2026-01-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/p/shortcodes/</loc>
-    <lastmod>2026-01-26T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/p/%E7%9F%AD%E4%BB%A3%E7%A2%BC/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="ja"
-                href="http://localhost:1313/ja/p/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%B3%E3%83%BC%E3%83%89/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="http://localhost:1313/p/shortcodes/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/tags/shortcodes/</loc>
-    <lastmod>2026-01-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://impself.github.io/tags/</loc>
     <lastmod>2026-01-26T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/en/tags/"
+                href="https://impself.github.io/en/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/tags/"
+                href="https://impself.github.io/zh-hant-tw/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/tags/"
+                href="https://impself.github.io/ja/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/tags/"
+                href="https://impself.github.io/tags/"
                 />
   </url><url>
-    <loc>http://localhost:1313/tags/css/</loc>
+    <loc>https://impself.github.io/p/%E7%9F%AD%E4%BB%A3%E7%A0%81/</loc>
+    <lastmod>2026-01-26T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-hant-tw"
+                href="https://impself.github.io/zh-hant-tw/p/%E7%9F%AD%E4%BB%A3%E7%A2%BC/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://impself.github.io/ja/p/%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%B3%E3%83%BC%E3%83%89/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="https://impself.github.io/p/%E7%9F%AD%E4%BB%A3%E7%A0%81/"
+                />
+  </url><url>
+    <loc>https://impself.github.io/%E5%85%B3%E4%BA%8E/</loc>
+    <lastmod>2026-01-26T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-hant-tw"
+                href="https://impself.github.io/zh-hant-tw/%E9%97%9C%E6%96%BC/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://impself.github.io/ja/%E3%81%93%E3%81%AE%E3%82%B5%E3%82%A4%E3%83%88%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="https://impself.github.io/%E5%85%B3%E4%BA%8E/"
+                />
+  </url><url>
+    <loc>https://impself.github.io/categories/documentation/</loc>
+    <lastmod>2026-01-26T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-hant-tw"
+                href="https://impself.github.io/zh-hant-tw/categories/documentation/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://impself.github.io/ja/categories/documentation/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="https://impself.github.io/categories/documentation/"
+                />
+  </url><url>
+    <loc>https://impself.github.io/p/image-gallery/</loc>
+    <lastmod>2026-01-26T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-hant-tw"
+                href="https://impself.github.io/zh-hant-tw/p/image-gallery/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://impself.github.io/ja/p/image-gallery/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="https://impself.github.io/p/image-gallery/"
+                />
+  </url><url>
+    <loc>https://impself.github.io/tags/%E9%9A%90%E7%A7%81/</loc>
+    <lastmod>2026-01-26T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-hant-tw"
+                href="https://impself.github.io/zh-hant-tw/tags/%E9%9A%90%E7%A7%81/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="ja"
+                href="https://impself.github.io/ja/tags/%E9%9A%90%E7%A7%81/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="https://impself.github.io/tags/%E9%9A%90%E7%A7%81/"
+                />
+  </url><url>
+    <loc>https://impself.github.io/tags/css/</loc>
     <lastmod>2026-01-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/html/</loc>
+    <loc>https://impself.github.io/tags/html/</loc>
     <lastmod>2026-01-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/markdown/</loc>
+    <loc>https://impself.github.io/tags/markdown/</loc>
     <lastmod>2026-01-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/p/markdown-syntax-guide/</loc>
+    <loc>https://impself.github.io/p/markdown-%E8%AF%AD%E6%B3%95%E6%8C%87%E5%8D%97/</loc>
     <lastmod>2026-01-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/themes/</loc>
+    <loc>https://impself.github.io/tags/themes/</loc>
     <lastmod>2026-01-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/p/math-typesetting/</loc>
+    <loc>https://impself.github.io/p/math-typesetting/</loc>
     <lastmod>2026-01-24T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/archives/</loc>
+    <loc>https://impself.github.io/archives/</loc>
     <lastmod>2019-05-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/archives/"
+                href="https://impself.github.io/zh-hant-tw/archives/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/archives/"
+                href="https://impself.github.io/ja/archives/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/archives/"
+                href="https://impself.github.io/archives/"
                 />
   </url><url>
-    <loc>http://localhost:1313/_index.zh/</loc>
-  </url><url>
-    <loc>http://localhost:1313/links/</loc>
+    <loc>https://impself.github.io/%E9%93%BE%E6%8E%A5/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/%E9%8F%88%E6%8E%A5/"
+                href="https://impself.github.io/zh-hant-tw/%E9%8F%88%E6%8E%A5/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/%E3%83%AA%E3%83%B3%E3%82%AF/"
+                href="https://impself.github.io/ja/%E3%83%AA%E3%83%B3%E3%82%AF/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/links/"
+                href="https://impself.github.io/%E9%93%BE%E6%8E%A5/"
                 />
   </url><url>
-    <loc>http://localhost:1313/search/</loc>
+    <loc>https://impself.github.io/search/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/search/"
+                href="https://impself.github.io/zh-hant-tw/search/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="ja"
-                href="http://localhost:1313/ja/search/"
+                href="https://impself.github.io/ja/search/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="http://localhost:1313/search/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/categories/documentation/documentation/</loc>
-  </url><url>
-    <loc>http://localhost:1313/tags/%E9%9A%90%E7%A7%81/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-hant-tw"
-                href="http://localhost:1313/zh-hant-tw/tags/%E9%9A%90%E7%A7%81/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="ja"
-                href="http://localhost:1313/ja/tags/%E9%9A%90%E7%A7%81/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="http://localhost:1313/tags/%E9%9A%90%E7%A7%81/"
+                href="https://impself.github.io/search/"
                 />
   </url>
 </urlset>
