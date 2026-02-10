@@ -161,7 +161,7 @@
                 href="https://impself.github.io/p/%E7%9F%AD%E4%BB%A3%E7%A0%81/"
                 />
   </url><url>
-    <loc>https://impself.github.io/%E5%85%B3%E4%BA%8E/</loc>
+    <loc>https://impself.github.io/about/</loc>
     <lastmod>2026-01-26T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
@@ -176,7 +176,7 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="https://impself.github.io/%E5%85%B3%E4%BA%8E/"
+                href="https://impself.github.io/about/"
                 />
   </url><url>
     <loc>https://impself.github.io/categories/documentation/</loc>
@@ -269,7 +269,7 @@
                 href="https://impself.github.io/archives/"
                 />
   </url><url>
-    <loc>https://impself.github.io/%E9%93%BE%E6%8E%A5/</loc>
+    <loc>https://impself.github.io/links/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-hant-tw"
@@ -283,7 +283,7 @@
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-cn"
-                href="https://impself.github.io/%E9%93%BE%E6%8E%A5/"
+                href="https://impself.github.io/links/"
                 />
   </url><url>
     <loc>https://impself.github.io/search/</loc>
