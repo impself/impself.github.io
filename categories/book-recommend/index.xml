@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>书籍推荐 on impself小破站</title>
+        <link>https://impself.github.io/categories/book-recommend/</link>
+        <description>Recent content in 书籍推荐 on impself小破站</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language><atom:link href="https://impself.github.io/categories/book-recommend/index.xml" rel="self" type="application/rss+xml" />
+    </channel>
+</rss>
