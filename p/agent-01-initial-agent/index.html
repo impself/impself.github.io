@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="系统梳理智能体的核心概念、分类方法与任务环境建模，并给出 6 道习题的完整解析。">
+<title>Agent 01-初识智能体</title>
+
+<link rel='canonical' href='https://impself.github.io/p/agent-01-initial-agent/'>
+
+<link rel="stylesheet" href="/scss/style.min.94a091a235bf4cfab80ae319933a593529e2ee31ace7858746e3b3fad30e61b7.css"><meta property='og:title' content="Agent 01-初识智能体">
+<meta property='og:description' content="系统梳理智能体的核心概念、分类方法与任务环境建模，并给出 6 道习题的完整解析。">
+<meta property='og:url' content='https://impself.github.io/p/agent-01-initial-agent/'>
+<meta property='og:site_name' content='impself小破站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Agent' /><meta property='article:tag' content='AI' /><meta property='article:published_time' content='2026-02-13T13:12:43&#43;08:00'/><meta property='article:modified_time' content='2026-02-13T13:12:43&#43;08:00'/>
+<meta name="twitter:title" content="Agent 01-初识智能体">
+<meta name="twitter:description" content="系统梳理智能体的核心概念、分类方法与任务环境建模，并给出 6 道习题的完整解析。">
+    <link rel="shortcut icon" href="/img/you2.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/scss/custom.min.28be12c7a518ab917c7da96011bc7634f0fde160cef656e54132a7353e9a9373.css" integrity="sha256-KL4Sx6UYq5F8falgEbx2NPD94WDO9lblQTKnNT6ak3M=">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/you2_hu_638602a613500777.jpg" width="300"
+                            height="299" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">impself小破站</a></h1>
+            <h2 class="site-description">XDUer，擅长面向搜索引擎编程，AI编程，golang初学者，agent小白</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/impself'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://google.com'
+                        target="_blank"
+                        title="Google"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-google"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20.945 11a9 9 0 1 1 -3.284 -5.997l-2.655 2.392a5.5 5.5 0 1 0 2.119 6.605h-4.125v-3h7.945" /></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://space.bilibili.com/1262668861'
+                        target="_blank"
+                        title="Bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-bilibili"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6" /><path d="M8 3l2 3" /><path d="M16 3l-2 3" /><path d="M9 13v-2" /><path d="M15 11v2" /></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://v.douyin.com/TfK7Cbs7r-8/'
+                        target="_blank"
+                        title="Douyin"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-tiktok"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M21 7.917v4.034a9.948 9.948 0 0 1 -5 -1.951v4.5a6.5 6.5 0 1 1 -8 -6.326v4.326a2.5 2.5 0 1 0 4 2v-11.5h4.083a6.005 6.005 0 0 0 4.917 4.917" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-智能体基础概念">1. 智能体基础概念</a>
+      <ol>
+        <li><a href="#11-四个核心要素">1.1 四个核心要素</a></li>
+        <li><a href="#12-从简单到复杂的智能体类型">1.2 从简单到复杂的智能体类型</a></li>
+        <li><a href="#13-常见分类维度">1.3 常见分类维度</a>
+          <ol>
+            <li><a href="#按反应方式分类">按反应方式分类</a></li>
+            <li><a href="#按知识表示分类">按知识表示分类</a></li>
+            <li><a href="#按学习能力分类">按学习能力分类</a></li>
+          </ol>
+        </li>
+        <li><a href="#14-系统-1--系统-2-与神经符号主义类比">1.4 系统 1 / 系统 2 与神经符号主义类比</a></li>
+      </ol>
+    </li>
+    <li><a href="#2-智能体任务环境建模peas">2. 智能体任务环境建模：PEAS</a></li>
+    <li><a href="#3-习题完整解析">3. 习题完整解析</a>
+      <ol>
+        <li><a href="#题-1判断主体是否为智能体及其类型">题 1：判断主体是否为智能体及其类型</a>
+          <ol>
+            <li><a href="#case-a超级计算机2-eflop">Case A：超级计算机（2 EFlop）</a></li>
+            <li><a href="#case-b高速场景下的自动驾驶紧急决策">Case B：高速场景下的自动驾驶紧急决策</a></li>
+            <li><a href="#case-calphago-对弈">Case C：AlphaGo 对弈</a></li>
+            <li><a href="#case-dchatgpt-智能客服">Case D：ChatGPT 智能客服</a></li>
+          </ol>
+        </li>
+        <li><a href="#题-2智能健身教练的-peas-与环境特性">题 2：智能健身教练的 PEAS 与环境特性</a>
+          <ol>
+            <li><a href="#peas-描述">PEAS 描述</a></li>
+            <li><a href="#环境特性分析">环境特性分析</a></li>
+          </ol>
+        </li>
+        <li><a href="#题-3workflow-vs-agent-在退款审核中的选择">题 3：Workflow vs Agent 在退款审核中的选择</a>
+          <ol>
+            <li><a href="#方案-aworkflow">方案 A（Workflow）</a></li>
+            <li><a href="#方案-bagent">方案 B（Agent）</a></li>
+            <li><a href="#什么时候选谁">什么时候选谁</a></li>
+            <li><a href="#方案-c分层混合架构">方案 C：分层混合架构</a></li>
+          </ol>
+        </li>
+        <li><a href="#题-4在旅行助手中扩展记忆备选反思知识库">题 4：在旅行助手中扩展记忆、备选、反思、知识库</a>
+          <ol>
+            <li><a href="#核心思路">核心思路</a></li>
+            <li><a href="#代码实现">代码实现</a></li>
+          </ol>
+        </li>
+        <li><a href="#题-5系统-1--系统-2-在医疗诊断助手中的分工">题 5：系统 1 / 系统 2 在医疗诊断助手中的分工</a>
+          <ol>
+            <li><a href="#场景门诊分诊与辅助诊断助手">场景：门诊分诊与辅助诊断助手</a></li>
+          </ol>
+        </li>
+        <li><a href="#题-6智能体局限与评估">题 6：智能体局限与评估</a>
+          <ol>
+            <li><a href="#为什么会出现幻觉">为什么会出现&quot;幻觉&quot;</a></li>
+            <li><a href="#为什么要限制最大循环次数">为什么要限制最大循环次数</a></li>
+            <li><a href="#如何评估智能体智能程度">如何评估智能体&quot;智能程度&quot;</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#4-小结">4. 小结</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/agent-dev/" style="background-color: #2a9d8f; color: #fff;">
+                Agent开发
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/agent-01-initial-agent/">Agent 01-初识智能体</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            系统梳理智能体的核心概念、分类方法与任务环境建模，并给出 6 道习题的完整解析。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-13T13:12:43&#43;08:00'>Feb 13, 2026</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 4 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>智能体（Agent）不是&quot;会算就行&quot;的程序，而是一个能够在环境中<strong>感知、决策、行动并持续改进</strong>的主体。本文先梳理核心概念，再给出习题的标准化解析，确保内容可阅读、可复盘、可用于后续实战。</p>
+<h2 id="1-智能体基础概念">1. 智能体基础概念
+</h2><h3 id="11-四个核心要素">1.1 四个核心要素
+</h3><p>一个完整智能体通常包含以下要素：</p>
+<ul>
+<li><strong>传感器（Sensors）</strong>：获取环境信息。</li>
+<li><strong>环境（Environment）</strong>：智能体所处并交互的外部世界。</li>
+<li><strong>执行器（Actuators）</strong>：对环境施加影响的手段。</li>
+<li><strong>行动（Action）</strong>：基于决策实际执行的动作。</li>
+</ul>
+<h3 id="12-从简单到复杂的智能体类型">1.2 从简单到复杂的智能体类型
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>特点</th>
+          <th>局限</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>简单反射智能体</td>
+          <td>只基于当前观测做规则匹配，不保留历史</td>
+          <td>无法应对需要理解上下文的复杂任务</td>
+      </tr>
+      <tr>
+          <td>基于模型的反射智能体</td>
+          <td>维护内部状态/世界模型，弥补&quot;看不全&quot;的问题</td>
+          <td>模型可能不准确，需要持续校准</td>
+      </tr>
+      <tr>
+          <td>基于目标的智能体</td>
+          <td>以&quot;达到目标状态&quot;为导向做规划</td>
+          <td>规划开销大，实时性较差</td>
+      </tr>
+      <tr>
+          <td>基于效用的智能体</td>
+          <td>比较不同结果&quot;好到什么程度&quot;，最大化期望效用</td>
+          <td>效用函数设计困难</td>
+      </tr>
+      <tr>
+          <td>学习型智能体</td>
+          <td>通过反馈不断更新策略</td>
+          <td>需要大量训练数据和反馈信号</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>强化学习（Reinforcement Learning, RL）是实现学习型智能体最具代表性的路径之一。一个学习型智能体包含一个<strong>性能元件</strong>（执行决策）和一个<strong>学习元件</strong>（通过观察结果不断修正策略）。</p>
+<h3 id="13-常见分类维度">1.3 常见分类维度
+</h3><h4 id="按反应方式分类">按反应方式分类
+</h4><ul>
+<li><strong>反应式智能体</strong>：接收到信息后立即行动，追求速度。</li>
+<li><strong>规划式智能体</strong>：经过深思熟虑的规划再行动，追求最优解。</li>
+<li><strong>混合式智能体</strong>：结合规划（Reasoning）与反应（Acting &amp; Observing），在速度与质量之间取得平衡。</li>
+</ul>
+<h4 id="按知识表示分类">按知识表示分类
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>特点</th>
+          <th>适用场景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>符号主义 AI</td>
+          <td>基于符号和规则，强调逻辑推理和明确的知识表示</td>
+          <td>结构化问题</td>
+      </tr>
+      <tr>
+          <td>亚符号主义 AI</td>
+          <td>基于连接主义和分布式表示（如神经网络）</td>
+          <td>复杂、非结构化数据</td>
+      </tr>
+      <tr>
+          <td>神经符号主义 AI</td>
+          <td>结合符号推理与神经网络的学习能力</td>
+          <td>需要同时处理逻辑与模式识别</td>
+      </tr>
+  </tbody>
+</table></div>
+<h4 id="按学习能力分类">按学习能力分类
+</h4><ul>
+<li>固定策略智能体：行为规则预先设定，不会随经验改变。</li>
+<li>可学习策略智能体：能够从反馈中学习，持续优化决策。</li>
+</ul>
+<h3 id="14-系统-1--系统-2-与神经符号主义类比">1.4 系统 1 / 系统 2 与神经符号主义类比
+</h3><p>卡尼曼的&quot;双系统理论&quot;为理解 AI 架构提供了很好的类比：</p>
+<ul>
+<li><strong>系统 1</strong>：快速、直觉、并行、模式识别驱动（更接近亚符号主义方法）。</li>
+<li><strong>系统 2</strong>：缓慢、审慎、基于逻辑、可解释推理驱动（更接近符号主义方法）。</li>
+</ul>
+<p>工程上常见的有效做法是&quot;系统 1 快速筛查 + 系统 2 重点复核&quot;，既保证效率，又不失准确性。</p>
+<h2 id="2-智能体任务环境建模peas">2. 智能体任务环境建模：PEAS
+</h2><p>PEAS 用于精确定义任务环境，是设计智能体的第一步：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>问题</th>
+          <th>示例（自动驾驶）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>P（Performance）</strong></td>
+          <td>如何评价做得好不好</td>
+          <td>安全性、到达时间、乘车舒适度</td>
+      </tr>
+      <tr>
+          <td><strong>E（Environment）</strong></td>
+          <td>智能体面对什么世界</td>
+          <td>道路、其他车辆、行人、交通信号、天气</td>
+      </tr>
+      <tr>
+          <td><strong>A（Actuators）</strong></td>
+          <td>它能做什么动作</td>
+          <td>加速、刹车、转向、转向灯、鸣笛</td>
+      </tr>
+      <tr>
+          <td><strong>S（Sensors）</strong></td>
+          <td>它能看到什么信号</td>
+          <td>摄像头、雷达、激光雷达、速度传感器、GPS</td>
+      </tr>
+  </tbody>
+</table></div>
+<blockquote>
+<p>如果 PEAS 不清晰，后续算法、工具链和评估标准都会失焦。</p>
+</blockquote>
+<h2 id="3-习题完整解析">3. 习题完整解析
+</h2><hr>
+<h3 id="题-1判断主体是否为智能体及其类型">题 1：判断主体是否为智能体及其类型
+</h3><p><strong>题目</strong>：请分析以下四个 case 中的主体是否属于智能体，如果是，属于哪种类型的智能体（可以从多个分类维度进行分析），并说明理由。</p>
+<h4 id="case-a超级计算机2-eflop">Case A：超级计算机（2 EFlop）
+</h4><p><strong>结论</strong>：<strong>通常不直接算智能体本体</strong>。</p>
+<p><strong>理由</strong>：一台符合冯·诺依曼结构的超级计算机，无论算力多强，本质上仍是高性能计算平台。它本身不具备自主目标、感知-决策-行动闭环；真正的智能体是其上运行的软件系统。智能体的关键在于&quot;自主性&quot;和&quot;与环境的交互&quot;，而非计算能力。</p>
+<h4 id="case-b高速场景下的自动驾驶紧急决策">Case B：高速场景下的自动驾驶紧急决策
+</h4><p>特斯拉自动驾驶系统在高速公路上行驶时，突然检测到前方有障碍物，需要在毫秒级做出刹车或变道决策。</p>
+<p><strong>结论</strong>：<strong>是智能体</strong>，核心是反应式，同时具备模型与目标约束。</p>
+<p><strong>理由</strong>：</p>
+<ul>
+<li>毫秒级避障强调实时反应，符合反应式智能体特征。</li>
+<li>但车道保持、速度控制、障碍物轨迹预测等又依赖内部状态估计（基于模型的反射智能体）。</li>
+<li>同时还有导航目的地这一目标约束（基于目标的智能体）。</li>
+<li>因此实际是<strong>混合式智能体</strong>，兼顾实时反应与规划能力。</li>
+</ul>
+<h4 id="case-calphago-对弈">Case C：AlphaGo 对弈
+</h4><p>AlphaGo在与人类棋手对弈时，需要评估当前局面并规划未来数十步的最优策略。</p>
+<p><strong>结论</strong>：<strong>是智能体</strong>，属于规划式 + 学习型智能体。</p>
+<p><strong>理由</strong>：</p>
+<ul>
+<li>通过蒙特卡洛树搜索与价值评估规划后续多步（规划式）。</li>
+<li>策略网络和价值网络由大量对弈数据训练而成（学习型）。</li>
+<li>通过自我对弈持续改进策略（强化学习）。</li>
+</ul>
+<h4 id="case-dchatgpt-智能客服">Case D：ChatGPT 智能客服
+</h4><p>ChatGPT 扮演的智能客服在处理用户投诉时，需要查询订单信息、分析问题原因、提供解决方案并安抚用户情绪。</p>
+<p><strong>结论</strong>：<strong>是智能体系统（或可演化为智能体系统）</strong>，属于混合式。</p>
+<p><strong>理由</strong>：</p>
+<ul>
+<li>需要多步工具调用（查订单、检索政策、查询库存）。</li>
+<li>需要对话推理能力理解用户意图。</li>
+<li>需要根据用户反馈调整策略（如安抚情绪）。</li>
+<li>单纯的语言模型不是完整智能体，但结合工具调用后可视为智能体系统。</li>
+</ul>
+<hr>
+<h3 id="题-2智能健身教练的-peas-与环境特性">题 2：智能健身教练的 PEAS 与环境特性
+</h3><p><strong>题目</strong>：假设你需要为一个&quot;智能健身教练&quot;设计任务环境。这个智能体能够：</p>
+<ul>
+<li>通过可穿戴设备监测用户的心率、运动强度等生理数据</li>
+<li>根据用户的健身目标（减脂/增肌/提升耐力）动态调整训练计划</li>
+<li>在用户运动过程中提供实时语音指导和动作纠正</li>
+<li>评估训练效果并给出饮食建议</li>
+</ul>
+<p>请使用 PEAS 模型完整描述这个智能体的任务环境，并分析该环境具有哪些特性（如部分可观察、随机性、动态性等）。</p>
+<h4 id="peas-描述">PEAS 描述
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>内容</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Performance（性能度量）</strong></td>
+          <td>- 训练目标达成率（减脂/增肌/耐力提升）<br>- 安全性（异常心率、动作风险触发率）<br>- 用户依从性（计划完成率、持续打卡率）<br>- 用户体验（满意度、建议采纳率）</td>
+      </tr>
+      <tr>
+          <td><strong>Environment（环境）</strong></td>
+          <td>- 用户身体状态（疲劳度、伤病情况）<br>- 家庭/健身房场景、可用器械<br>- 时间段、天气（影响户外运动）<br>- 饮食与睡眠状况<br>- 网络与设备状态</td>
+      </tr>
+      <tr>
+          <td><strong>Actuators（执行器）</strong></td>
+          <td>- 语音指导输出<br>- 动作纠正提示推送<br>- 训练计划调整指令<br>- 推送提醒<br>- 饮食建议生成</td>
+      </tr>
+      <tr>
+          <td><strong>Sensors（传感器）</strong></td>
+          <td>- 心率带/手表数据<br>- 动作传感器（如加速度计、陀螺仪）<br>- 摄像头姿态估计<br>- 历史训练日志<br>- 用户主观反馈（如问卷、语音）</td>
+      </tr>
+  </tbody>
+</table></div>
+<h4 id="环境特性分析">环境特性分析
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>特性</th>
+          <th>说明</th>
+          <th>示例</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>部分可观察</strong></td>
+          <td>无法直接观测某些关键状态</td>
+          <td>疲劳、疼痛、真实饮食执行情况难以直接测量</td>
+      </tr>
+      <tr>
+          <td><strong>随机性</strong></td>
+          <td>存在不可预测的扰动</td>
+          <td>生理状态波动、外部干扰、设备噪声</td>
+      </tr>
+      <tr>
+          <td><strong>动态性</strong></td>
+          <td>环境状态随时间快速变化</td>
+          <td>运动中心率、速度、体能状态实时变化</td>
+      </tr>
+      <tr>
+          <td><strong>连续性</strong></td>
+          <td>状态变量连续变化</td>
+          <td>心率、速度、负重等是连续量</td>
+      </tr>
+      <tr>
+          <td><strong>多目标约束</strong></td>
+          <td>需要平衡多个目标</td>
+          <td>效果、安全、体验之间存在权衡</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h3 id="题-3workflow-vs-agent-在退款审核中的选择">题 3：Workflow vs Agent 在退款审核中的选择
+</h3><p><strong>题目</strong>：某电商公司正在考虑两种方案来处理售后退款申请：</p>
+<p><strong>方案 A（Workflow）</strong>：设计一套固定流程，例如：</p>
+<ul>
+<li>A.1 对于一般商品且在 7 天之内，金额 &lt; 100RMB 自动通过；100-500RMB 由客服审核；&gt;500RMB 需主管审批；而特殊商品（如定制品）一律拒绝退款</li>
+<li>A.2 对于超过 7 天的商品，无论金额，只能由客服审核或主管审批</li>
+</ul>
+<p><strong>方案 B（Agent）</strong>：搭建一个智能体系统，让它理解退款政策、分析用户历史行为、评估商品状况，并自主决策是否批准退款</p>
+<p>请分析：</p>
+<ol>
+<li>这两种方案各自的优缺点是什么？</li>
+<li>在什么情况下 Workflow 更合适？什么情况下 Agent 更有优势？</li>
+<li>如果你是该电商公司的负责人，你更倾向于采用哪种方案？</li>
+<li>是否存在一个方案 C，能够结合两种方案，达到扬长避短的效果？</li>
+</ol>
+<h4 id="方案-aworkflow">方案 A（Workflow）
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>优点</th>
+          <th>缺点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>- 可控、可审计、合规实现简单<br>- 决策一致性高，成本和响应时间可预测<br>- 规则透明，易于向用户解释</td>
+          <td>- 对边界案例不灵活<br>- 规则维护成本随业务复杂度上升<br>- 无法处理规则之外的情况</td>
+      </tr>
+  </tbody>
+</table></div>
+<h4 id="方案-bagent">方案 B（Agent）
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>优点</th>
+          <th>缺点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>- 能处理复杂情境与个体差异<br>- 可融合更多信号（历史行为、商品状态、风险分）<br>- 适应性强，新场景下可快速调整</td>
+          <td>- 决策稳定性与可解释性挑战更大<br>- 需要监控、回放、评估与人工兜底体系<br>- 错误决策可能造成批量损失</td>
+      </tr>
+  </tbody>
+</table></div>
+<h4 id="什么时候选谁">什么时候选谁
+</h4><ul>
+<li><strong>Workflow 更合适</strong>：规则清晰、合规强约束、低风险高并发场景（如标准化商品的小额退款）</li>
+<li><strong>Agent 更有优势</strong>：案例复杂、需个性化、规则难以穷举场景（如大额、定制商品、VIP 用户）</li>
+</ul>
+<h4 id="方案-c分层混合架构">方案 C：分层混合架构
+</h4><p>如果是负责人，推荐采用<strong>方案 C（分层混合）</strong>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">第 1 层：Workflow 处理高频标准单
+</span></span><span class="line"><span class="cl">         ↓ (路由规则)
+</span></span><span class="line"><span class="cl">第 2 层：高风险或疑难单路由给 Agent 评估
+</span></span><span class="line"><span class="cl">         ↓ (不确定或人工复核阈值)
+</span></span><span class="line"><span class="cl">第 3 层：人工复核最终兜底
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个组合通常比&quot;纯 A&quot;或&quot;纯 B&quot;更稳健：</p>
+<ul>
+<li>标准case快速处理，降低成本</li>
+<li>复杂case由Agent个性化处理</li>
+<li>关键决策有人工兜底，控制风险</li>
+</ul>
+<hr>
+<h3 id="题-4在旅行助手中扩展记忆备选反思知识库">题 4：在旅行助手中扩展记忆、备选、反思、知识库
+</h3><p><strong>题目</strong>：在智能旅行助手的基础上，请思考如何添加以下功能（可以只描述设计思路，也可以进一步尝试代码实现）：</p>
+<p>提示：思考如何修改 Thought-Action-Observation 循环来实现这些功能。</p>
+<ol>
+<li>添加一个&quot;记忆&quot;功能，让智能体记住用户的偏好（如喜欢历史文化景点、预算范围等）</li>
+<li>当推荐的景点门票已售罄时，智能体能够自动推荐备选方案</li>
+<li>如果用户连续拒绝了 3 个推荐，智能体能够反思并调整推荐策略</li>
+<li>当用户接受推荐的景点时，把景点和相关信息加入智能体的&quot;知识库&quot;，以便未来推荐时参考</li>
+</ol>
+<h4 id="核心思路">核心思路
+</h4><p>把 Thought-Action-Observation 循环升级为&quot;带状态的闭环&quot;：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>组件</th>
+          <th>功能</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>State（状态）</strong></td>
+          <td><code>user_preferences</code>：用户偏好<br><code>rejection_count</code>：连续拒绝计数<br><code>knowledge_base</code>：已接受景点的历史记录</td>
+      </tr>
+      <tr>
+          <td><strong>Thought（思考）</strong></td>
+          <td>融合用户偏好、历史接受记录与当前约束生成候选</td>
+      </tr>
+      <tr>
+          <td><strong>Action（行动）</strong></td>
+          <td>查询库存/票务、输出推荐、必要时切换备选</td>
+      </tr>
+      <tr>
+          <td><strong>Observation（观察）</strong></td>
+          <td>记录接受/拒绝反馈；若连续拒绝达到阈值触发策略反思</td>
+      </tr>
+  </tbody>
+</table></div>
+<h4 id="代码实现">代码实现
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">TravelAgent</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">user_preferences</span> <span class="o">=</span> <span class="p">{}</span>      <span class="c1"># 用户偏好</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">rejection_count</span> <span class="o">=</span> <span class="mi">0</span>        <span class="c1"># 连续拒绝计数</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">knowledge_base</span> <span class="o">=</span> <span class="p">[]</span>        <span class="c1"># 已接受景点的知识库</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">recommend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_input</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;生成推荐，若售罄则生成备选&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">rec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_recommendation</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_sold_out</span><span class="p">(</span><span class="n">rec</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">rec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_alternative</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">rec</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">receive_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">,</span> <span class="n">accepted_item</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;接收用户反馈，更新状态&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">feedback</span> <span class="o">==</span> <span class="s2">&#34;reject&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">rejection_count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rejection_count</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">reflect_and_adjust</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">rejection_count</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 重置计数</span>
+</span></span><span class="line"><span class="cl">        <span class="k">elif</span> <span class="n">feedback</span> <span class="o">==</span> <span class="s2">&#34;accept&#34;</span> <span class="ow">and</span> <span class="n">accepted_item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">rejection_count</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">update_knowledge_base</span><span class="p">(</span><span class="n">accepted_item</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">generate_recommendation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_input</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;结合偏好 + 历史行为生成推荐&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 实现逻辑：根据 user_preferences 和 knowledge_base 生成候选</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">is_sold_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recommendation</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;调用票务接口检查库存&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">generate_alternative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_input</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;在约束不变时返回备选方案&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 实现逻辑：寻找与原推荐相似但仍有库存的景点</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">reflect_and_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;分析连续拒绝原因，动态调整推荐权重&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 实现逻辑：分析历史拒绝记录，调整推荐策略</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">update_knowledge_base</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">accepted_item</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;记录&#34;被接受方案&#34;的上下文信息&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">knowledge_base</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;item&#34;</span><span class="p">:</span> <span class="n">accepted_item</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;timestamp&#34;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># 可以附加更多信息，如用户反馈等</span>
+</span></span><span class="line"><span class="cl">        <span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h3 id="题-5系统-1--系统-2-在医疗诊断助手中的分工">题 5：系统 1 / 系统 2 在医疗诊断助手中的分工
+</h3><p><strong>题目</strong>：卡尼曼的&quot;系统 1&quot;（快速直觉）和&quot;系统 2&quot;（慢速推理）理论为神经符号主义 AI 提供了很好的类比。请首先构思一个具体的智能体的落地应用场景，然后说明场景中的：</p>
+<ol>
+<li>哪些任务应该由&quot;系统 1&quot;处理？</li>
+<li>哪些任务应该由&quot;系统 2&quot;处理？</li>
+<li>这两个系统如何协同工作以达成最终目标？</li>
+</ol>
+<p>提示：医疗诊断助手、法律咨询机器人、金融风控系统等都是常见的应用场景。</p>
+<h4 id="场景门诊分诊与辅助诊断助手">场景：门诊分诊与辅助诊断助手
+</h4><h5 id="系统-1-负责快速直觉处理">系统 1 负责（快速直觉处理）
+</h5><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>任务</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>症状快速归类</td>
+          <td>根据主诉快速判断科室分类</td>
+      </tr>
+      <tr>
+          <td>高危信号初筛</td>
+          <td>识别胸痛、呼吸困难等紧急症状</td>
+      </tr>
+      <tr>
+          <td>候选疾病粗排</td>
+          <td>基于症状模式匹配给出候选疾病列表</td>
+      </tr>
+  </tbody>
+</table></div>
+<h5 id="系统-2-负责慢速推理处理">系统 2 负责（慢速推理处理）
+</h5><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>任务</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>结合病史、检验、指南做因果推理</td>
+          <td>综合多源信息进行诊断</td>
+      </tr>
+      <tr>
+          <td>处理冲突证据</td>
+          <td>当不同检验结果矛盾时做出判断</td>
+      </tr>
+      <tr>
+          <td>输出可解释诊断建议与下一步检查计划</td>
+          <td>给出明确的诊断依据和建议</td>
+      </tr>
+  </tbody>
+</table></div>
+<h5 id="协同方式">协同方式
+</h5><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">患者输入 → 系统1快速筛查 → 低风险/常见病 → 直接输出建议
+</span></span><span class="line"><span class="cl">                        ↓
+</span></span><span class="line"><span class="cl">                  高风险/不确定
+</span></span><span class="line"><span class="cl">                        ↓
+</span></span><span class="line"><span class="cl">                    系统2深度分析 → 诊断建议 + 检查计划
+</span></span><span class="line"><span class="cl">                        ↓
+</span></span><span class="line"><span class="cl">                    反哺系统1（持续校准筛查规则）
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>目标是在<strong>效率、准确性与可解释性</strong>之间取得平衡：</p>
+<ul>
+<li>系统 1 保证高召回率（不漏掉高危患者）</li>
+<li>系统 2 对关键样本投入更多算力</li>
+<li>系统 2 的结论持续反哺系统 1，形成闭环学习</li>
+</ul>
+<hr>
+<h3 id="题-6智能体局限与评估">题 6：智能体局限与评估
+</h3><p><strong>题目</strong>：尽管大语言模型驱动的智能体系统展现出了强大的能力，但它们仍然存在诸多局限。请分析以下问题：</p>
+<ol>
+<li>为什么智能体或智能体系统有时会产生&quot;幻觉&quot;（生成看似合理但实际错误的信息）？</li>
+<li>在智能体案例中，我们设置了最大循环次数为 5 次。如果没有这个限制，智能体可能会陷入什么问题？</li>
+<li>如何评估一个智能体的&quot;智能&quot;程度？仅使用准确率指标是否足够？</li>
+</ol>
+<h4 id="为什么会出现幻觉">为什么会出现&quot;幻觉&quot;
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>原因</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>训练数据噪声与知识过时</td>
+          <td>模型学习到的是训练时的知识，可能已经过时或包含错误</td>
+      </tr>
+      <tr>
+          <td>检索增强阶段召回错误证据</td>
+          <td>RAG 召回了&quot;相似但不正确&quot;的证据（向量相似度 ≠ 语义等价）</td>
+      </tr>
+      <tr>
+          <td>工具调用失败或返回不完整信息</td>
+          <td>外部工具异常时，模型可能&quot;编造&quot;答案来补全</td>
+      </tr>
+      <tr>
+          <td>长链路推理中的误差累积</td>
+          <td>多步推理中，每一步的小误差会被放大</td>
+      </tr>
+      <tr>
+          <td>奖励目标与真实业务目标不一致</td>
+          <td>RLHF 的奖励模型可能鼓励某些表面行为而非真实正确性</td>
+      </tr>
+  </tbody>
+</table></div>
+<h4 id="为什么要限制最大循环次数">为什么要限制最大循环次数
+</h4><p>若不限制最大循环次数，可能出现：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>风险</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>死循环或无效反复调用工具</td>
+          <td>智能体可能在无效路径上反复尝试</td>
+      </tr>
+      <tr>
+          <td>Token 与时延成本失控</td>
+          <td>无限增长导致成本和响应时间不可控</td>
+      </tr>
+      <tr>
+          <td>上下文被噪声挤占</td>
+          <td>过长历史导致关键信息被稀释，决策质量下降</td>
+      </tr>
+      <tr>
+          <td>陷入局部最优</td>
+          <td>缺乏&quot;及时止损&quot;机制，无法跳出无效策略</td>
+      </tr>
+  </tbody>
+</table></div>
+<h4 id="如何评估智能体智能程度">如何评估智能体&quot;智能程度&quot;
+</h4><p>仅看准确率不够，应至少加入以下维度：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>指标示例</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>任务成功率</strong></td>
+          <td>端到端目标是否完成（如客户问题是否解决）</td>
+      </tr>
+      <tr>
+          <td><strong>成本与时延</strong></td>
+          <td>Token 消耗、调用次数、响应时间</td>
+      </tr>
+      <tr>
+          <td><strong>稳定性</strong></td>
+          <td>多次运行结果一致性</td>
+      </tr>
+      <tr>
+          <td><strong>鲁棒性</strong></td>
+          <td>异常输入与边界条件下的表现</td>
+      </tr>
+      <tr>
+          <td><strong>安全与合规</strong></td>
+          <td>是否输出有害内容、是否越权访问</td>
+      </tr>
+      <tr>
+          <td><strong>可解释性与可审计性</strong></td>
+          <td>能否追溯关键决策依据</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="4-小结">4. 小结
+</h2><p>智能体工程的关键不在&quot;模型参数更大&quot;，而在于：</p>
+<ol>
+<li><strong>任务定义是否清晰</strong>（PEAS 是第一步）</li>
+<li><strong>决策结构是否匹配场景</strong>（反应式/规划式/混合式各有所长）</li>
+<li><strong>评估与兜底是否完善</strong>（准确率之外的多维指标 + 人工兜底）</li>
+</ol>
+<p>从工程落地看，<strong>混合架构</strong>通常是最实用路线：规则保底、智能增益、人工兜底。这既保证了系统的可控性，又能在复杂场景下发挥智能体的优势。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/agent/">Agent</a>
+        
+            <a href="/tags/ai/">AI</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 impself小破站
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.34.1">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.c922af694cc257bf1ecc41c0dd7b0430f9114ec280ccf67cd2c6ad55f5316c4e.js" defer></script><script type="text/javascript" src="/ts/custom.5d820af14e5a5809f83a09b219bc3d8a7224a84b6bc755db35ce533b714cac35.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

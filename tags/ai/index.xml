@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Agent开发 on impself小破站</title>
-        <link>https://impself.github.io/categories/agent-dev/</link>
-        <description>Recent content in Agent开发 on impself小破站</description>
+        <title>AI on impself小破站</title>
+        <link>https://impself.github.io/tags/ai/</link>
+        <description>Recent content in AI on impself小破站</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Fri, 13 Feb 2026 13:12:43 +0800</lastBuildDate><atom:link href="https://impself.github.io/categories/agent-dev/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 13 Feb 2026 13:12:43 +0800</lastBuildDate><atom:link href="https://impself.github.io/tags/ai/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Agent 01-初识智能体</title>
         <link>https://impself.github.io/p/agent-01-initial-agent/</link>
         <pubDate>Fri, 13 Feb 2026 13:12:43 +0800</pubDate>

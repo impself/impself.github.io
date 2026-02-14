@@ -6,7 +6,670 @@
         <description>Recent content in Posts on impself小破站</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Wed, 11 Feb 2026 17:27:27 +0800</lastBuildDate><atom:link href="https://impself.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 13 Feb 2026 13:12:43 +0800</lastBuildDate><atom:link href="https://impself.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Agent 01-初识智能体</title>
+        <link>https://impself.github.io/p/agent-01-initial-agent/</link>
+        <pubDate>Fri, 13 Feb 2026 13:12:43 +0800</pubDate>
+        
+        <guid>https://impself.github.io/p/agent-01-initial-agent/</guid>
+        <description>&lt;p&gt;智能体（Agent）不是&amp;quot;会算就行&amp;quot;的程序，而是一个能够在环境中&lt;strong&gt;感知、决策、行动并持续改进&lt;/strong&gt;的主体。本文先梳理核心概念，再给出习题的标准化解析，确保内容可阅读、可复盘、可用于后续实战。&lt;/p&gt;
+&lt;h2 id=&#34;1-智能体基础概念&#34;&gt;1. 智能体基础概念
+&lt;/h2&gt;&lt;h3 id=&#34;11-四个核心要素&#34;&gt;1.1 四个核心要素
+&lt;/h3&gt;&lt;p&gt;一个完整智能体通常包含以下要素：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;传感器（Sensors）&lt;/strong&gt;：获取环境信息。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;环境（Environment）&lt;/strong&gt;：智能体所处并交互的外部世界。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;执行器（Actuators）&lt;/strong&gt;：对环境施加影响的手段。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;行动（Action）&lt;/strong&gt;：基于决策实际执行的动作。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;12-从简单到复杂的智能体类型&#34;&gt;1.2 从简单到复杂的智能体类型
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;类型&lt;/th&gt;
+          &lt;th&gt;特点&lt;/th&gt;
+          &lt;th&gt;局限&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;简单反射智能体&lt;/td&gt;
+          &lt;td&gt;只基于当前观测做规则匹配，不保留历史&lt;/td&gt;
+          &lt;td&gt;无法应对需要理解上下文的复杂任务&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;基于模型的反射智能体&lt;/td&gt;
+          &lt;td&gt;维护内部状态/世界模型，弥补&amp;quot;看不全&amp;quot;的问题&lt;/td&gt;
+          &lt;td&gt;模型可能不准确，需要持续校准&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;基于目标的智能体&lt;/td&gt;
+          &lt;td&gt;以&amp;quot;达到目标状态&amp;quot;为导向做规划&lt;/td&gt;
+          &lt;td&gt;规划开销大，实时性较差&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;基于效用的智能体&lt;/td&gt;
+          &lt;td&gt;比较不同结果&amp;quot;好到什么程度&amp;quot;，最大化期望效用&lt;/td&gt;
+          &lt;td&gt;效用函数设计困难&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;学习型智能体&lt;/td&gt;
+          &lt;td&gt;通过反馈不断更新策略&lt;/td&gt;
+          &lt;td&gt;需要大量训练数据和反馈信号&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;强化学习（Reinforcement Learning, RL）是实现学习型智能体最具代表性的路径之一。一个学习型智能体包含一个&lt;strong&gt;性能元件&lt;/strong&gt;（执行决策）和一个&lt;strong&gt;学习元件&lt;/strong&gt;（通过观察结果不断修正策略）。&lt;/p&gt;
+&lt;h3 id=&#34;13-常见分类维度&#34;&gt;1.3 常见分类维度
+&lt;/h3&gt;&lt;h4 id=&#34;按反应方式分类&#34;&gt;按反应方式分类
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;反应式智能体&lt;/strong&gt;：接收到信息后立即行动，追求速度。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;规划式智能体&lt;/strong&gt;：经过深思熟虑的规划再行动，追求最优解。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;混合式智能体&lt;/strong&gt;：结合规划（Reasoning）与反应（Acting &amp;amp; Observing），在速度与质量之间取得平衡。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;按知识表示分类&#34;&gt;按知识表示分类
+&lt;/h4&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;类型&lt;/th&gt;
+          &lt;th&gt;特点&lt;/th&gt;
+          &lt;th&gt;适用场景&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;符号主义 AI&lt;/td&gt;
+          &lt;td&gt;基于符号和规则，强调逻辑推理和明确的知识表示&lt;/td&gt;
+          &lt;td&gt;结构化问题&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;亚符号主义 AI&lt;/td&gt;
+          &lt;td&gt;基于连接主义和分布式表示（如神经网络）&lt;/td&gt;
+          &lt;td&gt;复杂、非结构化数据&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;神经符号主义 AI&lt;/td&gt;
+          &lt;td&gt;结合符号推理与神经网络的学习能力&lt;/td&gt;
+          &lt;td&gt;需要同时处理逻辑与模式识别&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;按学习能力分类&#34;&gt;按学习能力分类
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;固定策略智能体：行为规则预先设定，不会随经验改变。&lt;/li&gt;
+&lt;li&gt;可学习策略智能体：能够从反馈中学习，持续优化决策。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;14-系统-1--系统-2-与神经符号主义类比&#34;&gt;1.4 系统 1 / 系统 2 与神经符号主义类比
+&lt;/h3&gt;&lt;p&gt;卡尼曼的&amp;quot;双系统理论&amp;quot;为理解 AI 架构提供了很好的类比：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;系统 1&lt;/strong&gt;：快速、直觉、并行、模式识别驱动（更接近亚符号主义方法）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;系统 2&lt;/strong&gt;：缓慢、审慎、基于逻辑、可解释推理驱动（更接近符号主义方法）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;工程上常见的有效做法是&amp;quot;系统 1 快速筛查 + 系统 2 重点复核&amp;quot;，既保证效率，又不失准确性。&lt;/p&gt;
+&lt;h2 id=&#34;2-智能体任务环境建模peas&#34;&gt;2. 智能体任务环境建模：PEAS
+&lt;/h2&gt;&lt;p&gt;PEAS 用于精确定义任务环境，是设计智能体的第一步：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;维度&lt;/th&gt;
+          &lt;th&gt;问题&lt;/th&gt;
+          &lt;th&gt;示例（自动驾驶）&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;P（Performance）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;如何评价做得好不好&lt;/td&gt;
+          &lt;td&gt;安全性、到达时间、乘车舒适度&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;E（Environment）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;智能体面对什么世界&lt;/td&gt;
+          &lt;td&gt;道路、其他车辆、行人、交通信号、天气&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;A（Actuators）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;它能做什么动作&lt;/td&gt;
+          &lt;td&gt;加速、刹车、转向、转向灯、鸣笛&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;S（Sensors）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;它能看到什么信号&lt;/td&gt;
+          &lt;td&gt;摄像头、雷达、激光雷达、速度传感器、GPS&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果 PEAS 不清晰，后续算法、工具链和评估标准都会失焦。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;3-习题完整解析&#34;&gt;3. 习题完整解析
+&lt;/h2&gt;&lt;hr&gt;
+&lt;h3 id=&#34;题-1判断主体是否为智能体及其类型&#34;&gt;题 1：判断主体是否为智能体及其类型
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;题目&lt;/strong&gt;：请分析以下四个 case 中的主体是否属于智能体，如果是，属于哪种类型的智能体（可以从多个分类维度进行分析），并说明理由。&lt;/p&gt;
+&lt;h4 id=&#34;case-a超级计算机2-eflop&#34;&gt;Case A：超级计算机（2 EFlop）
+&lt;/h4&gt;&lt;p&gt;&lt;strong&gt;结论&lt;/strong&gt;：&lt;strong&gt;通常不直接算智能体本体&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;理由&lt;/strong&gt;：一台符合冯·诺依曼结构的超级计算机，无论算力多强，本质上仍是高性能计算平台。它本身不具备自主目标、感知-决策-行动闭环；真正的智能体是其上运行的软件系统。智能体的关键在于&amp;quot;自主性&amp;quot;和&amp;quot;与环境的交互&amp;quot;，而非计算能力。&lt;/p&gt;
+&lt;h4 id=&#34;case-b高速场景下的自动驾驶紧急决策&#34;&gt;Case B：高速场景下的自动驾驶紧急决策
+&lt;/h4&gt;&lt;p&gt;特斯拉自动驾驶系统在高速公路上行驶时，突然检测到前方有障碍物，需要在毫秒级做出刹车或变道决策。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;结论&lt;/strong&gt;：&lt;strong&gt;是智能体&lt;/strong&gt;，核心是反应式，同时具备模型与目标约束。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;理由&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;毫秒级避障强调实时反应，符合反应式智能体特征。&lt;/li&gt;
+&lt;li&gt;但车道保持、速度控制、障碍物轨迹预测等又依赖内部状态估计（基于模型的反射智能体）。&lt;/li&gt;
+&lt;li&gt;同时还有导航目的地这一目标约束（基于目标的智能体）。&lt;/li&gt;
+&lt;li&gt;因此实际是&lt;strong&gt;混合式智能体&lt;/strong&gt;，兼顾实时反应与规划能力。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;case-calphago-对弈&#34;&gt;Case C：AlphaGo 对弈
+&lt;/h4&gt;&lt;p&gt;AlphaGo在与人类棋手对弈时，需要评估当前局面并规划未来数十步的最优策略。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;结论&lt;/strong&gt;：&lt;strong&gt;是智能体&lt;/strong&gt;，属于规划式 + 学习型智能体。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;理由&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通过蒙特卡洛树搜索与价值评估规划后续多步（规划式）。&lt;/li&gt;
+&lt;li&gt;策略网络和价值网络由大量对弈数据训练而成（学习型）。&lt;/li&gt;
+&lt;li&gt;通过自我对弈持续改进策略（强化学习）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;case-dchatgpt-智能客服&#34;&gt;Case D：ChatGPT 智能客服
+&lt;/h4&gt;&lt;p&gt;ChatGPT 扮演的智能客服在处理用户投诉时，需要查询订单信息、分析问题原因、提供解决方案并安抚用户情绪。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;结论&lt;/strong&gt;：&lt;strong&gt;是智能体系统（或可演化为智能体系统）&lt;/strong&gt;，属于混合式。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;理由&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要多步工具调用（查订单、检索政策、查询库存）。&lt;/li&gt;
+&lt;li&gt;需要对话推理能力理解用户意图。&lt;/li&gt;
+&lt;li&gt;需要根据用户反馈调整策略（如安抚情绪）。&lt;/li&gt;
+&lt;li&gt;单纯的语言模型不是完整智能体，但结合工具调用后可视为智能体系统。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;题-2智能健身教练的-peas-与环境特性&#34;&gt;题 2：智能健身教练的 PEAS 与环境特性
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;题目&lt;/strong&gt;：假设你需要为一个&amp;quot;智能健身教练&amp;quot;设计任务环境。这个智能体能够：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通过可穿戴设备监测用户的心率、运动强度等生理数据&lt;/li&gt;
+&lt;li&gt;根据用户的健身目标（减脂/增肌/提升耐力）动态调整训练计划&lt;/li&gt;
+&lt;li&gt;在用户运动过程中提供实时语音指导和动作纠正&lt;/li&gt;
+&lt;li&gt;评估训练效果并给出饮食建议&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;请使用 PEAS 模型完整描述这个智能体的任务环境，并分析该环境具有哪些特性（如部分可观察、随机性、动态性等）。&lt;/p&gt;
+&lt;h4 id=&#34;peas-描述&#34;&gt;PEAS 描述
+&lt;/h4&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;维度&lt;/th&gt;
+          &lt;th&gt;内容&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Performance（性能度量）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;- 训练目标达成率（减脂/增肌/耐力提升）&lt;br&gt;- 安全性（异常心率、动作风险触发率）&lt;br&gt;- 用户依从性（计划完成率、持续打卡率）&lt;br&gt;- 用户体验（满意度、建议采纳率）&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Environment（环境）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;- 用户身体状态（疲劳度、伤病情况）&lt;br&gt;- 家庭/健身房场景、可用器械&lt;br&gt;- 时间段、天气（影响户外运动）&lt;br&gt;- 饮食与睡眠状况&lt;br&gt;- 网络与设备状态&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Actuators（执行器）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;- 语音指导输出&lt;br&gt;- 动作纠正提示推送&lt;br&gt;- 训练计划调整指令&lt;br&gt;- 推送提醒&lt;br&gt;- 饮食建议生成&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Sensors（传感器）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;- 心率带/手表数据&lt;br&gt;- 动作传感器（如加速度计、陀螺仪）&lt;br&gt;- 摄像头姿态估计&lt;br&gt;- 历史训练日志&lt;br&gt;- 用户主观反馈（如问卷、语音）&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;环境特性分析&#34;&gt;环境特性分析
+&lt;/h4&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;特性&lt;/th&gt;
+          &lt;th&gt;说明&lt;/th&gt;
+          &lt;th&gt;示例&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;部分可观察&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;无法直接观测某些关键状态&lt;/td&gt;
+          &lt;td&gt;疲劳、疼痛、真实饮食执行情况难以直接测量&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;随机性&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;存在不可预测的扰动&lt;/td&gt;
+          &lt;td&gt;生理状态波动、外部干扰、设备噪声&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;动态性&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;环境状态随时间快速变化&lt;/td&gt;
+          &lt;td&gt;运动中心率、速度、体能状态实时变化&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;连续性&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;状态变量连续变化&lt;/td&gt;
+          &lt;td&gt;心率、速度、负重等是连续量&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;多目标约束&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;需要平衡多个目标&lt;/td&gt;
+          &lt;td&gt;效果、安全、体验之间存在权衡&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;题-3workflow-vs-agent-在退款审核中的选择&#34;&gt;题 3：Workflow vs Agent 在退款审核中的选择
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;题目&lt;/strong&gt;：某电商公司正在考虑两种方案来处理售后退款申请：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;方案 A（Workflow）&lt;/strong&gt;：设计一套固定流程，例如：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A.1 对于一般商品且在 7 天之内，金额 &amp;lt; 100RMB 自动通过；100-500RMB 由客服审核；&amp;gt;500RMB 需主管审批；而特殊商品（如定制品）一律拒绝退款&lt;/li&gt;
+&lt;li&gt;A.2 对于超过 7 天的商品，无论金额，只能由客服审核或主管审批&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;方案 B（Agent）&lt;/strong&gt;：搭建一个智能体系统，让它理解退款政策、分析用户历史行为、评估商品状况，并自主决策是否批准退款&lt;/p&gt;
+&lt;p&gt;请分析：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;这两种方案各自的优缺点是什么？&lt;/li&gt;
+&lt;li&gt;在什么情况下 Workflow 更合适？什么情况下 Agent 更有优势？&lt;/li&gt;
+&lt;li&gt;如果你是该电商公司的负责人，你更倾向于采用哪种方案？&lt;/li&gt;
+&lt;li&gt;是否存在一个方案 C，能够结合两种方案，达到扬长避短的效果？&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;方案-aworkflow&#34;&gt;方案 A（Workflow）
+&lt;/h4&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;优点&lt;/th&gt;
+          &lt;th&gt;缺点&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;- 可控、可审计、合规实现简单&lt;br&gt;- 决策一致性高，成本和响应时间可预测&lt;br&gt;- 规则透明，易于向用户解释&lt;/td&gt;
+          &lt;td&gt;- 对边界案例不灵活&lt;br&gt;- 规则维护成本随业务复杂度上升&lt;br&gt;- 无法处理规则之外的情况&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;方案-bagent&#34;&gt;方案 B（Agent）
+&lt;/h4&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;优点&lt;/th&gt;
+          &lt;th&gt;缺点&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;- 能处理复杂情境与个体差异&lt;br&gt;- 可融合更多信号（历史行为、商品状态、风险分）&lt;br&gt;- 适应性强，新场景下可快速调整&lt;/td&gt;
+          &lt;td&gt;- 决策稳定性与可解释性挑战更大&lt;br&gt;- 需要监控、回放、评估与人工兜底体系&lt;br&gt;- 错误决策可能造成批量损失&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;什么时候选谁&#34;&gt;什么时候选谁
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Workflow 更合适&lt;/strong&gt;：规则清晰、合规强约束、低风险高并发场景（如标准化商品的小额退款）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Agent 更有优势&lt;/strong&gt;：案例复杂、需个性化、规则难以穷举场景（如大额、定制商品、VIP 用户）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;方案-c分层混合架构&#34;&gt;方案 C：分层混合架构
+&lt;/h4&gt;&lt;p&gt;如果是负责人，推荐采用&lt;strong&gt;方案 C（分层混合）&lt;/strong&gt;：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;第 1 层：Workflow 处理高频标准单
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;         ↓ (路由规则)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;第 2 层：高风险或疑难单路由给 Agent 评估
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;         ↓ (不确定或人工复核阈值)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;第 3 层：人工复核最终兜底
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这个组合通常比&amp;quot;纯 A&amp;quot;或&amp;quot;纯 B&amp;quot;更稳健：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;标准case快速处理，降低成本&lt;/li&gt;
+&lt;li&gt;复杂case由Agent个性化处理&lt;/li&gt;
+&lt;li&gt;关键决策有人工兜底，控制风险&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;题-4在旅行助手中扩展记忆备选反思知识库&#34;&gt;题 4：在旅行助手中扩展记忆、备选、反思、知识库
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;题目&lt;/strong&gt;：在智能旅行助手的基础上，请思考如何添加以下功能（可以只描述设计思路，也可以进一步尝试代码实现）：&lt;/p&gt;
+&lt;p&gt;提示：思考如何修改 Thought-Action-Observation 循环来实现这些功能。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;添加一个&amp;quot;记忆&amp;quot;功能，让智能体记住用户的偏好（如喜欢历史文化景点、预算范围等）&lt;/li&gt;
+&lt;li&gt;当推荐的景点门票已售罄时，智能体能够自动推荐备选方案&lt;/li&gt;
+&lt;li&gt;如果用户连续拒绝了 3 个推荐，智能体能够反思并调整推荐策略&lt;/li&gt;
+&lt;li&gt;当用户接受推荐的景点时，把景点和相关信息加入智能体的&amp;quot;知识库&amp;quot;，以便未来推荐时参考&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;核心思路&#34;&gt;核心思路
+&lt;/h4&gt;&lt;p&gt;把 Thought-Action-Observation 循环升级为&amp;quot;带状态的闭环&amp;quot;：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;组件&lt;/th&gt;
+          &lt;th&gt;功能&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;State（状态）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;user_preferences&lt;/code&gt;：用户偏好&lt;br&gt;&lt;code&gt;rejection_count&lt;/code&gt;：连续拒绝计数&lt;br&gt;&lt;code&gt;knowledge_base&lt;/code&gt;：已接受景点的历史记录&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Thought（思考）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;融合用户偏好、历史接受记录与当前约束生成候选&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Action（行动）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;查询库存/票务、输出推荐、必要时切换备选&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;Observation（观察）&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;记录接受/拒绝反馈；若连续拒绝达到阈值触发策略反思&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;代码实现&#34;&gt;代码实现
+&lt;/h4&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;50
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;TravelAgent&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;fm&#34;&gt;__init__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user_preferences&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;      &lt;span class=&#34;c1&#34;&gt;# 用户偏好&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rejection_count&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;        &lt;span class=&#34;c1&#34;&gt;# 连续拒绝计数&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;knowledge_base&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;        &lt;span class=&#34;c1&#34;&gt;# 已接受景点的知识库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;recommend&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user_input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34;生成推荐，若售罄则生成备选&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;rec&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;generate_recommendation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user_input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;is_sold_out&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;rec&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;generate_alternative&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user_input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;rec&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;receive_feedback&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;feedback&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;accepted_item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;None&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34;接收用户反馈，更新状态&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;feedback&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;reject&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rejection_count&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rejection_count&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;reflect_and_adjust&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rejection_count&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;# 重置计数&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;elif&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;feedback&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;accept&amp;#34;&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;accepted_item&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;is&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;None&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rejection_count&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;update_knowledge_base&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;accepted_item&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;generate_recommendation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user_input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34;结合偏好 + 历史行为生成推荐&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;c1&#34;&gt;# 实现逻辑：根据 user_preferences 和 knowledge_base 生成候选&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;raise&lt;/span&gt; &lt;span class=&#34;ne&#34;&gt;NotImplementedError&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;is_sold_out&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;recommendation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34;调用票务接口检查库存&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;raise&lt;/span&gt; &lt;span class=&#34;ne&#34;&gt;NotImplementedError&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;generate_alternative&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user_input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34;在约束不变时返回备选方案&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;c1&#34;&gt;# 实现逻辑：寻找与原推荐相似但仍有库存的景点&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;raise&lt;/span&gt; &lt;span class=&#34;ne&#34;&gt;NotImplementedError&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;reflect_and_adjust&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34;分析连续拒绝原因，动态调整推荐权重&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;c1&#34;&gt;# 实现逻辑：分析历史拒绝记录，调整推荐策略&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;raise&lt;/span&gt; &lt;span class=&#34;ne&#34;&gt;NotImplementedError&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;update_knowledge_base&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;accepted_item&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34;记录&amp;#34;被接受方案&amp;#34;的上下文信息&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;knowledge_base&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;append&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;({&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;s2&#34;&gt;&amp;#34;item&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;accepted_item&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;s2&#34;&gt;&amp;#34;timestamp&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;time&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;now&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;c1&#34;&gt;# 可以附加更多信息，如用户反馈等&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;hr&gt;
+&lt;h3 id=&#34;题-5系统-1--系统-2-在医疗诊断助手中的分工&#34;&gt;题 5：系统 1 / 系统 2 在医疗诊断助手中的分工
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;题目&lt;/strong&gt;：卡尼曼的&amp;quot;系统 1&amp;quot;（快速直觉）和&amp;quot;系统 2&amp;quot;（慢速推理）理论为神经符号主义 AI 提供了很好的类比。请首先构思一个具体的智能体的落地应用场景，然后说明场景中的：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;哪些任务应该由&amp;quot;系统 1&amp;quot;处理？&lt;/li&gt;
+&lt;li&gt;哪些任务应该由&amp;quot;系统 2&amp;quot;处理？&lt;/li&gt;
+&lt;li&gt;这两个系统如何协同工作以达成最终目标？&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;提示：医疗诊断助手、法律咨询机器人、金融风控系统等都是常见的应用场景。&lt;/p&gt;
+&lt;h4 id=&#34;场景门诊分诊与辅助诊断助手&#34;&gt;场景：门诊分诊与辅助诊断助手
+&lt;/h4&gt;&lt;h5 id=&#34;系统-1-负责快速直觉处理&#34;&gt;系统 1 负责（快速直觉处理）
+&lt;/h5&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;任务&lt;/th&gt;
+          &lt;th&gt;说明&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;症状快速归类&lt;/td&gt;
+          &lt;td&gt;根据主诉快速判断科室分类&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;高危信号初筛&lt;/td&gt;
+          &lt;td&gt;识别胸痛、呼吸困难等紧急症状&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;候选疾病粗排&lt;/td&gt;
+          &lt;td&gt;基于症状模式匹配给出候选疾病列表&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h5 id=&#34;系统-2-负责慢速推理处理&#34;&gt;系统 2 负责（慢速推理处理）
+&lt;/h5&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;任务&lt;/th&gt;
+          &lt;th&gt;说明&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;结合病史、检验、指南做因果推理&lt;/td&gt;
+          &lt;td&gt;综合多源信息进行诊断&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;处理冲突证据&lt;/td&gt;
+          &lt;td&gt;当不同检验结果矛盾时做出判断&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;输出可解释诊断建议与下一步检查计划&lt;/td&gt;
+          &lt;td&gt;给出明确的诊断依据和建议&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h5 id=&#34;协同方式&#34;&gt;协同方式
+&lt;/h5&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;患者输入 → 系统1快速筛查 → 低风险/常见病 → 直接输出建议
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                        ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                  高风险/不确定
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                        ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                    系统2深度分析 → 诊断建议 + 检查计划
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                        ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                    反哺系统1（持续校准筛查规则）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;目标是在&lt;strong&gt;效率、准确性与可解释性&lt;/strong&gt;之间取得平衡：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;系统 1 保证高召回率（不漏掉高危患者）&lt;/li&gt;
+&lt;li&gt;系统 2 对关键样本投入更多算力&lt;/li&gt;
+&lt;li&gt;系统 2 的结论持续反哺系统 1，形成闭环学习&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;题-6智能体局限与评估&#34;&gt;题 6：智能体局限与评估
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;题目&lt;/strong&gt;：尽管大语言模型驱动的智能体系统展现出了强大的能力，但它们仍然存在诸多局限。请分析以下问题：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;为什么智能体或智能体系统有时会产生&amp;quot;幻觉&amp;quot;（生成看似合理但实际错误的信息）？&lt;/li&gt;
+&lt;li&gt;在智能体案例中，我们设置了最大循环次数为 5 次。如果没有这个限制，智能体可能会陷入什么问题？&lt;/li&gt;
+&lt;li&gt;如何评估一个智能体的&amp;quot;智能&amp;quot;程度？仅使用准确率指标是否足够？&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;为什么会出现幻觉&#34;&gt;为什么会出现&amp;quot;幻觉&amp;quot;
+&lt;/h4&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;原因&lt;/th&gt;
+          &lt;th&gt;说明&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;训练数据噪声与知识过时&lt;/td&gt;
+          &lt;td&gt;模型学习到的是训练时的知识，可能已经过时或包含错误&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;检索增强阶段召回错误证据&lt;/td&gt;
+          &lt;td&gt;RAG 召回了&amp;quot;相似但不正确&amp;quot;的证据（向量相似度 ≠ 语义等价）&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;工具调用失败或返回不完整信息&lt;/td&gt;
+          &lt;td&gt;外部工具异常时，模型可能&amp;quot;编造&amp;quot;答案来补全&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;长链路推理中的误差累积&lt;/td&gt;
+          &lt;td&gt;多步推理中，每一步的小误差会被放大&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;奖励目标与真实业务目标不一致&lt;/td&gt;
+          &lt;td&gt;RLHF 的奖励模型可能鼓励某些表面行为而非真实正确性&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;为什么要限制最大循环次数&#34;&gt;为什么要限制最大循环次数
+&lt;/h4&gt;&lt;p&gt;若不限制最大循环次数，可能出现：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;风险&lt;/th&gt;
+          &lt;th&gt;说明&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;死循环或无效反复调用工具&lt;/td&gt;
+          &lt;td&gt;智能体可能在无效路径上反复尝试&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Token 与时延成本失控&lt;/td&gt;
+          &lt;td&gt;无限增长导致成本和响应时间不可控&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;上下文被噪声挤占&lt;/td&gt;
+          &lt;td&gt;过长历史导致关键信息被稀释，决策质量下降&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;陷入局部最优&lt;/td&gt;
+          &lt;td&gt;缺乏&amp;quot;及时止损&amp;quot;机制，无法跳出无效策略&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;如何评估智能体智能程度&#34;&gt;如何评估智能体&amp;quot;智能程度&amp;quot;
+&lt;/h4&gt;&lt;p&gt;仅看准确率不够，应至少加入以下维度：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;维度&lt;/th&gt;
+          &lt;th&gt;指标示例&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;任务成功率&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;端到端目标是否完成（如客户问题是否解决）&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;成本与时延&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;Token 消耗、调用次数、响应时间&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;稳定性&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;多次运行结果一致性&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;鲁棒性&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;异常输入与边界条件下的表现&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;安全与合规&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;是否输出有害内容、是否越权访问&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;strong&gt;可解释性与可审计性&lt;/strong&gt;&lt;/td&gt;
+          &lt;td&gt;能否追溯关键决策依据&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;4-小结&#34;&gt;4. 小结
+&lt;/h2&gt;&lt;p&gt;智能体工程的关键不在&amp;quot;模型参数更大&amp;quot;，而在于：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;任务定义是否清晰&lt;/strong&gt;（PEAS 是第一步）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;决策结构是否匹配场景&lt;/strong&gt;（反应式/规划式/混合式各有所长）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;评估与兜底是否完善&lt;/strong&gt;（准确率之外的多维指标 + 人工兜底）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;从工程落地看，&lt;strong&gt;混合架构&lt;/strong&gt;通常是最实用路线：规则保底、智能增益、人工兜底。这既保证了系统的可控性，又能在复杂场景下发挥智能体的优势。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>React 03-组件（一）：生命周期</title>
         <link>https://impself.github.io/p/react-component-lifecycle/</link>
         <pubDate>Wed, 11 Feb 2026 17:27:27 +0800</pubDate>
