@@ -6,7 +6,1258 @@
         <description>Recent content on impself小破站</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Fri, 13 Feb 2026 13:12:43 +0800</lastBuildDate><atom:link href="https://impself.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 18 Feb 2026 13:24:09 +0800</lastBuildDate><atom:link href="https://impself.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Agent 04-智能体经典范式构建</title>
+        <link>https://impself.github.io/p/agent-04-agent-classic-paradigm/</link>
+        <pubDate>Wed, 18 Feb 2026 13:24:09 +0800</pubDate>
+        
+        <guid>https://impself.github.io/p/agent-04-agent-classic-paradigm/</guid>
+        <description>&lt;h2 id=&#34;引言&#34;&gt;引言
+&lt;/h2&gt;&lt;p&gt;在前三章的学习中，我们已经掌握了关于大语言模型的基础知识。本章将进入实践环节，通过&amp;quot;亲手造轮子&amp;quot;的方式，从零开始编码实现&lt;strong&gt;三种业界经典的智能体构建范式&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ReAct&lt;/strong&gt; — 推理与行动结合&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Plan-and-Solve&lt;/strong&gt; — 规划与执行分离&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Reflection&lt;/strong&gt; — 自我反思与迭代优化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我们将深入探索它们的核心工作原理，并通过具体的实战案例，分析各自的优势、局限与适用场景。&lt;/p&gt;
+&lt;h2 id=&#34;核心知识点概览&#34;&gt;核心知识点概览
+&lt;/h2&gt;&lt;h3 id=&#34;1-react思考-行动的动态循环&#34;&gt;1. ReAct：思考-行动的动态循环
+&lt;/h3&gt;&lt;p&gt;ReAct 范式构建了一个能与外部世界交互的智能体。其核心机制是 &lt;strong&gt;&amp;ldquo;思考(Thought) → 行动(Action) → 观察(Observation)&amp;rdquo;&lt;/strong&gt; 的动态循环。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://impself.github.io/p/agent-04-agent-classic-paradigm/react-loop.png&#34;
+	width=&#34;1401&#34;
+	height=&#34;435&#34;
+	srcset=&#34;https://impself.github.io/p/agent-04-agent-classic-paradigm/react-loop_hu_c02fe59af2b89539.png 480w, https://impself.github.io/p/agent-04-agent-classic-paradigm/react-loop_hu_b3dc8db617f7a9bc.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;ReAct 循环&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;322&#34;
+		data-flex-basis=&#34;772px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;核心优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;环境适应性强，能够利用外部工具&lt;/li&gt;
+&lt;li&gt;具备动态纠错能力&lt;/li&gt;
+&lt;li&gt;适合处理探索性、需要实时信息的任务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;典型应用场景：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要搜索引擎辅助的问答&lt;/li&gt;
+&lt;li&gt;实时数据查询&lt;/li&gt;
+&lt;li&gt;API 调用与交互式任务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;2-plan-and-solve先规划后执行&#34;&gt;2. Plan-and-Solve：先规划，后执行
+&lt;/h3&gt;&lt;p&gt;Plan-and-Solve 范式将复杂问题分解为清晰的步骤，然后逐一执行。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;执行流程：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;输入问题 → 规划阶段（生成步骤列表） → 执行阶段（逐步完成）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;核心优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;结构性强，逻辑清晰&lt;/li&gt;
+&lt;li&gt;稳定性高，推理路径确定&lt;/li&gt;
+&lt;li&gt;适合逻辑路径固定、内部推理密集的任务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;典型应用场景：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;多步数学推理&lt;/li&gt;
+&lt;li&gt;复杂问题分解&lt;/li&gt;
+&lt;li&gt;流程化任务处理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;3-reflection执行-反思-优化&#34;&gt;3. Reflection：执行-反思-优化
+&lt;/h3&gt;&lt;p&gt;Reflection 范式引入了自我优化能力，通过 &lt;strong&gt;&amp;ldquo;执行 → 反思 → 优化&amp;rdquo;&lt;/strong&gt; 的迭代循环提升解决方案质量。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;迭代流程：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;初始方案 → 执行与评估 → 反思反馈 → 优化改进 → (循环) → 最终方案
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;核心价值：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;显著提升输出质量&lt;/li&gt;
+&lt;li&gt;自动发现并修正错误&lt;/li&gt;
+&lt;li&gt;适用于对准确性和可靠性要求极高的场景&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;典型应用场景：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;代码生成与优化&lt;/li&gt;
+&lt;li&gt;学术写作辅助&lt;/li&gt;
+&lt;li&gt;决策支持系统&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;三种范式的对比分析&#34;&gt;三种范式的对比分析
+&lt;/h2&gt;&lt;p&gt;本章探讨的三种范式，代表了智能体解决问题的三种不同策略，如下表所示：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;范式&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;思考模式&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;核心优势&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;适用场景&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;&lt;strong&gt;ReAct&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;思考-行动一体，动态循环&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;环境适应、动态纠错&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;探索性任务、工具调用&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;&lt;strong&gt;Plan-and-Solve&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;先规划，后执行&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;结构稳定、逻辑清晰&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;多步推理、流程化任务&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;&lt;strong&gt;Reflection&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;执行-反思-优化迭代&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;质量提升、自我修正&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;高精度要求、复杂输出&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;💡 &lt;strong&gt;选择建议&lt;/strong&gt;：在实际应用中，选择哪种范式取决于任务的核心需求。某些复杂场景下，也可以将多种范式组合使用。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;架构组合示例&#34;&gt;架构组合示例
+&lt;/h2&gt;&lt;p&gt;当面临复杂任务时，可以考虑 &lt;strong&gt;混合范式架构&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Plan-and-Solve&lt;/strong&gt; 进行高层次任务规划&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ReAct&lt;/strong&gt; 在执行过程中处理具体的操作和环境交互&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Reflection&lt;/strong&gt; 对整个过程进行自我优化和改进&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;适用场景：&lt;/strong&gt; 智能客服系统、自动驾驶、复杂工作流自动化等。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;小结与展望&#34;&gt;小结与展望
+&lt;/h2&gt;&lt;p&gt;至此，我们已经掌握了构建单个智能体的核心技术体系：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;✅ 理解了 ReAct 的动态交互机制&lt;/li&gt;
+&lt;li&gt;✅ 掌握了 Plan-and-Solve 的结构化规划方法&lt;/li&gt;
+&lt;li&gt;✅ 学会了 Reflection 的自我优化技巧&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;下一站预告：&lt;/strong&gt; 为了更好地将理论付诸实践，下一章我们将探索不同&lt;strong&gt;低代码平台&lt;/strong&gt;的使用方式，以及&lt;strong&gt;轻代码构建 Agent&lt;/strong&gt;的实战方案。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;思考与练习&#34;&gt;思考与练习
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;⚠️ &lt;strong&gt;提示&lt;/strong&gt;：部分习题没有标准答案，重点在于培养对智能体范式设计的综合理解和实践能力。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;练习一范式理解与选择&#34;&gt;练习一：范式理解与选择
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;问题 1.1&lt;/strong&gt;：ReAct、Plan-and-Solve 和 Reflection 这三种范式在&amp;quot;思考&amp;quot;与&amp;quot;行动&amp;quot;的组织方式上有什么本质区别？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;范式&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;组织方式&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;ReAct&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;思考-行动一体，动态循环；思考指导行动，行动结果反哺思考&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;Plan-and-Solve&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;先规划，后执行；分阶段处理，一次规划多步执行&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;Reflection&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;执行-反思-优化；通过迭代循环持续提升质量&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 1.2&lt;/strong&gt;：如果要设计一个&amp;quot;智能家居控制助手&amp;quot;（需要控制灯光、空调、窗帘等多个设备，并根据用户习惯自动调节），你会选择哪种范式作为基础架构？为什么？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;推荐选择：ReAct&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;理由：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;智能家居控制需要实时响应用户指令和环境变化&lt;/li&gt;
+&lt;li&gt;ReAct 的动态循环能够更好地适应这种需求&lt;/li&gt;
+&lt;li&gt;其环境适应性和动态纠错能力非常适合处理各种突发情况&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 1.3&lt;/strong&gt;：是否可以将这三种范式进行组合使用？请设计一个混合范式的智能体架构。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;混合架构设计：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;输入任务
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[Plan-and-Solve] 高层次任务规划
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[ReAct] 动态执行与环境交互（每一步骤）
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[Reflection] 全过程自我优化与改进
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;输出结果
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;适用场景：&lt;/strong&gt; 智能客服系统、自动驾驶、复杂项目管理等需要同时具备规划能力、实时交互和持续优化的场景。&lt;/p&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;练习二输出解析的鲁棒性&#34;&gt;练习二：输出解析的鲁棒性
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;问题 2.1&lt;/strong&gt;：在 ReAct 实现中，我们使用正则表达式解析大语言模型的输出。当前的解析方法存在哪些潜在脆弱性？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;潜在问题：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;格式依赖性强：如果模型输出格式变化（如标签被替换或省略），解析会失败&lt;/li&gt;
+&lt;li&gt;额外文本干扰：输出中包含额外文本时可能导致匹配错误&lt;/li&gt;
+&lt;li&gt;边界情况处理：特殊字符、多行输出等边界情况容易引发问题&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 2.2&lt;/strong&gt;：除了正则表达式，还有哪些更鲁棒的输出解析方案？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;改进方案：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;结构化输出&lt;/strong&gt;：使用 JSON、XML 等格式规范模型输出&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自然语言理解&lt;/strong&gt;：使用 NLU 技术识别意图和实体&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;专用解析器&lt;/strong&gt;：针对特定格式设计专用解析逻辑&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;模型约束&lt;/strong&gt;：使用支持结构化输出的模型（如 Function Calling）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;练习三工具调用与扩展&#34;&gt;练习三：工具调用与扩展
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;问题 3.1&lt;/strong&gt;：为 ReAct 智能体添加一个&amp;quot;计算器&amp;quot;工具，使其能够处理复杂的数学计算问题。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看代码示例&lt;/summary&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;calculator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;expression&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;float&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34;安全地计算数学表达式&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;ast&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;operator&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;op&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;operators&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;ast&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Add&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;op&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ast&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Sub&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;op&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sub&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;ast&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Mult&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;op&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;mul&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ast&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;op&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;truediv&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;eval_node&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;node&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;isinstance&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;node&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ast&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Num&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;node&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;n&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;elif&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;isinstance&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;node&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ast&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BinOp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;left&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eval_node&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;node&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;left&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;right&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eval_node&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;node&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;right&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;operators&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;node&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;op&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)](&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;left&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;right&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;raise&lt;/span&gt; &lt;span class=&#34;ne&#34;&gt;ValueError&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;sa&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;不支持的节点类型: &lt;/span&gt;&lt;span class=&#34;si&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;node&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;try&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;eval_node&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ast&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;parse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;expression&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;mode&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;eval&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;except&lt;/span&gt; &lt;span class=&#34;ne&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;sa&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;计算错误: &lt;/span&gt;&lt;span class=&#34;si&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 注册工具&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;tools&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;register&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;calculator&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;calculator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;计算数学表达式，如 &amp;#39;(123 + 456) * 789 / 12&amp;#39;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 3.2&lt;/strong&gt;：当可调用工具数量增加到 50-100 个时，如何优化工具的组织和检索机制？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;优化策略：&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;问题&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;解决方案&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;上下文占用大&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;分层组织，按需加载工具描述&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;相似工具干扰&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;工具聚类 + 语义检索&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;选择错误率高&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;约束执行 + 置信度过滤&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;工程实现：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;分层索引&lt;/strong&gt;：建立工具分类目录（类目 → 子类 → 工具）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;语义检索&lt;/strong&gt;：用向量相似度找到候选工具子集&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;工具路由&lt;/strong&gt;：训练轻量级路由模型，直接映射到目标工具&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;缓存优化&lt;/strong&gt;：缓存常用工具的调用结果&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;练习四动态规划机制&#34;&gt;练习四：动态规划机制
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;问题 4.1&lt;/strong&gt;：Plan-and-Solve 的计划是&amp;quot;静态&amp;quot;的，如何设计一个&amp;quot;动态重规划&amp;quot;机制？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;动态重规划机制设计：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+  graph TD
+    A[执行步骤] --&amp;gt; B{结果校验}
+    B --&amp;gt;|成功| C[继续下一步]
+    B --&amp;gt;|失败| D{重试次数 &amp;lt; 阈值?}
+    D --&amp;gt;|是| E[局部重规划]
+    D --&amp;gt;|否| F[全局重规划]
+    E --&amp;gt; A
+    F --&amp;gt; A
+&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;关键组件：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;结果校验模块：判断是否满足成功标准&lt;/li&gt;
+&lt;li&gt;局部重规划：更换工具/调整参数/插入补充步骤&lt;/li&gt;
+&lt;li&gt;全局重规划：重新生成后续步骤&lt;/li&gt;
+&lt;li&gt;安全退出：设置重试和重规划次数上限&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 4.2&lt;/strong&gt;：对比 Plan-and-Solve 与 ReAct，在处理&amp;quot;预订商务旅行&amp;quot;任务时哪种更合适？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;场景分析：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;| 范式 | 优势 | 劣势 |
+|:&amp;mdash;|:&amp;mdash;|
+| &lt;strong&gt;Plan-and-Solve&lt;/strong&gt; | 适合处理有关联的多步骤预订 | 难以应对实时变化（如售罄、价格跳变） |
+| &lt;strong&gt;ReAct&lt;/strong&gt; | 能根据实时结果灵活调整 | 可能缺乏整体规划 |&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;最佳方案：&lt;/strong&gt; 组合使用&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用 Plan-and-Solve 做高层次规划（确定预订顺序和约束）&lt;/li&gt;
+&lt;li&gt;用 ReAct 处理每个子步骤的执行与纠错（如换日期、换机场）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 4.3&lt;/strong&gt;：设计一个&amp;quot;分层规划&amp;quot;系统及其优势。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;分层规划架构：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;高层抽象计划 (3-8 个里程碑)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ├── 阶段 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    │   └── 细化子计划 (具体工具、参数、检查点)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ├── 阶段 2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    │   └── 细化子计划
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    └── ...
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;核心优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;优势&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;说明&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;可扩展&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;高层计划稳定，细节按需生成&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;更稳健&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;局部失败只需重规划子计划&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;工具选择&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;明确的意图收窄候选工具范围&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;可观测性&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;高层里程碑便于审计和监控&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;可复用&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;高层模板可跨任务复用&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;练习五reflection-机制深入&#34;&gt;练习五：Reflection 机制深入
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;问题 5.1&lt;/strong&gt;：使用两个不同的模型（一个更强大做反思，一个更快做执行）会带来什么影响？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;双模型架构分析：&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;收益&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;代价&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;用&amp;quot;高推理能力&amp;quot;提升正确性&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;增加系统复杂度&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;用&amp;quot;高吞吐低成本&amp;quot;承担重复劳动&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;需要模型对齐与调试&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;成本效益更优&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;增加调用链路延迟&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;结论：&lt;/strong&gt; 对于工程化长期运行的系统（如自动代码代理），双模型架构通常比单模型更稳定、更经济。&lt;/p&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 5.2&lt;/strong&gt;：如何设计更智能的 Reflection 终止条件？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;改进的终止条件：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;should_terminate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;iteration&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;history&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;c1&#34;&gt;# 1. 质量评分阈值&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;latest_score&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.95&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;质量达标&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;c1&#34;&gt;# 2. 改进幅度检测&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;abs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;latest_score&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;previous_score&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.01&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;改进饱和&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;c1&#34;&gt;# 3. 外部评估通过&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;all_tests_passed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;测试通过&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;c1&#34;&gt;# 4. 迭代次数上限&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;iteration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;max_iterations&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;达到最大迭代次数&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;False&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;继续优化&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;多维度判断：&lt;/strong&gt; 质量评分、改进幅度、外部测试、计算预算&lt;/p&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 5.3&lt;/strong&gt;：设计一个&amp;quot;学术论文写作助手&amp;quot;的多维度 Reflection 机制。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;多维度评估体系：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+  graph TD
+    A[论文初稿] --&amp;gt; B[段落逻辑性评估]
+    A --&amp;gt; C[方法创新性评估]
+    A --&amp;gt; D[语言表达评估]
+    A --&amp;gt; E[引用规范评估]
+    B --&amp;gt; F[综合反馈报告]
+    C --&amp;gt; F
+    D --&amp;gt; F
+    E --&amp;gt; F
+    F --&amp;gt; G[针对性优化]
+    G --&amp;gt; H{终止条件满足?}
+    H --&amp;gt;|否| A
+    H --&amp;gt;|是| I[最终论文]
+&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;评估维度：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;段落逻辑性&lt;/strong&gt;：连贯性与结构合理性&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;方法创新性&lt;/strong&gt;：科学贡献与技术亮点&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;语言表达&lt;/strong&gt;：语法、用词、流畅度&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;引用规范&lt;/strong&gt;：格式正确性与引用完整性&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;练习六提示词工程&#34;&gt;练习六：提示词工程
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;问题 6.1&lt;/strong&gt;：ReAct 和 Plan-and-Solve 的提示词结构设计有何不同？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;范式&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;提示词设计重点&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;ReAct&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;强调&amp;quot;Thought-Action-Observation&amp;quot;循环，明确三者角色定义&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;Plan-and-Solve&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;强调分阶段处理，明确规划阶段和执行阶段的边界&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;核心差异&lt;/strong&gt;：提示词结构设计直接服务于各自范式的执行逻辑。&lt;/p&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 6.2&lt;/strong&gt;：角色设定对智能体行为的影响。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;角色设定对比：&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;角色&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;输出倾向&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&amp;ldquo;严格的代码评审专家&amp;rdquo;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;关注正确性、性能、安全性&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&amp;ldquo;注重可读性的开源维护者&amp;rdquo;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;关注清晰度、注释、结构&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&amp;ldquo;注重效率的工程经理&amp;rdquo;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;关注开发速度、可维护性&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;结论：&lt;/strong&gt; 角色设定是引导模型行为的重要手段，应根据目标场景精心设计。&lt;/p&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 6.3&lt;/strong&gt;：Few-shot 示例的效果分析。&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;方案&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;优点&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;缺点&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;适用场景&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;无 Few-shot&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;灵活、节省 token&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;格式不稳定&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;创意性任务&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;有 Few-shot&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;稳定性高、格式遵循好&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;token 消耗大&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;结构化输出任务&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;建议：&lt;/strong&gt; 对于需要结构化输出的智能体（如 Reflection、Planner），Few-shot 是&lt;strong&gt;必要而非可选&lt;/strong&gt;的优化。&lt;/p&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;练习七综合实战&#34;&gt;练习七：综合实战
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;场景：&lt;/strong&gt; 某电商公司希望搭建&amp;quot;客服智能体&amp;quot;，需要以下功能：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;理解用户的退款申请理由&lt;/li&gt;
+&lt;li&gt;查询用户的订单信息和物流状态&lt;/li&gt;
+&lt;li&gt;根据公司政策智能判断是否批准退款&lt;/li&gt;
+&lt;li&gt;生成得体的回复邮件并发送&lt;/li&gt;
+&lt;li&gt;争议情况下进行自我反思&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 7.1&lt;/strong&gt;：选择何种范式作为核心架构？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;推荐架构：ReAct + Reflection&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;组件&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;职责&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;ReAct&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;动态调用工具查询订单、物流，做出初步判断&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;Reflection&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;对争议决策进行反思，提供更审慎的建议&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 7.2&lt;/strong&gt;：系统需要哪些核心工具？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;工具&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;功能描述&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;订单查询工具&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;根据用户信息查询订单详情和物流状态&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;政策判断工具&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;根据退款政策评估申请是否符合条件&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;邮件生成工具&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;生成得体回复并发送至用户邮箱&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;情感分析工具&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;分析用户情绪，调整回复语气&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 7.3&lt;/strong&gt;：如何设计提示词以平衡公司利益与用户体验？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;p&gt;&lt;strong&gt;提示词设计策略：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-markdown&#34; data-lang=&#34;markdown&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gh&#34;&gt;# 角色设定
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;你是一位专业且友好的客服代表，代表公司处理退款申请。
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gh&#34;&gt;# 决策原则
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;1.&lt;/span&gt; 严格遵守公司退款政策
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;2.&lt;/span&gt; 在保护公司利益的前提下，尽可能满足用户需求
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;3.&lt;/span&gt; 对用户表达理解和关心
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gh&#34;&gt;# 回复要求
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 语气友好、专业
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 清晰说明决策理由
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;-&lt;/span&gt; 提供替代方案（如适用）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/details&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;问题 7.4&lt;/strong&gt;：产品上线可能面临哪些风险？如何降低？&lt;/p&gt;
+&lt;details&gt;
+&lt;summary&gt;点击查看参考答案&lt;/summary&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;风险类型&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;风险描述&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;缓解措施&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;错误决策&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;误批/误拒退款申请&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;多模型评估 + 人工审核兜底&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;隐私泄露&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;用户数据暴露&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;数据加密 + 访问控制 + 审计&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;体验下降&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;回复不当导致用户不满&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;持续优化提示词 + 反馈机制&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;strong&gt;系统稳定性&lt;/strong&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;服务中断影响用户&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;冗余架构 + 监控告警 + 定期维护&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/details&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;结语&#34;&gt;结语
+&lt;/h2&gt;&lt;p&gt;本章通过三种经典范式的实践，建立了构建智能体完整技术栈的认知。下一章，我们将走进&lt;strong&gt;低代码平台&lt;/strong&gt;的世界，探索更高效的 Agent 构建方式。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;敬请期待！&lt;/strong&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Agent 03-大模型语言基础</title>
+        <link>https://impself.github.io/p/agent-03-agent-language-basics/</link>
+        <pubDate>Sun, 15 Feb 2026 18:37:25 +0800</pubDate>
+        
+        <guid>https://impself.github.io/p/agent-03-agent-language-basics/</guid>
+        <description>&lt;p&gt;1.自然语言处理中，语言模型经历了从统计到神经网络的模型演进。&lt;/p&gt;
+&lt;p&gt;请使用本章提供的迷你语料库（datawhale agent learns, datawhale agent works），计算句子 agent works 在Bigram模型下的概率
+N-gram模型的核心假设是马尔可夫假设。请解释这个假设的含义，以及N-gram模型存在哪些根本性局限？
+神经网络语言模型（RNN/LSTM）和Transformer分别是如何克服N-gram模型局限的？它们各自的优势是什么？
+2.Transformer架构[4]是现代大语言模型的基础。其中：&lt;/p&gt;
+&lt;p&gt;提示：可以结合本章3.1.2节的代码实现来辅助理解&lt;/p&gt;
+&lt;p&gt;自注意力机制（Self-Attention）的核心思想是什么？
+自注意力 (Self-Attention) 机制就是对这种现象的数学建模。它允许模型在处理序列中的每一个词时，都能兼顾句子中的所有其他词，并为这些词分配不同的“注意力权重”。权重越高的词，代表其与当前词的关联性越强，其信息也应该在当前词的表示中占据更大的比重。&lt;/p&gt;
+&lt;p&gt;为什么Transformer能够并行处理序列，而RNN必须串行处理？位置编码（Positional Encoding）在其中起什么作用？
+它完全抛弃了循环结构，转而使用自注意力机制来捕捉序列中的依赖关系。这使得Transformer能够同时处理序列中的所有位置，从而实现并行计算。位置编码则为模型提供了序列中各个词的位置信息，使得模型能够理解词与词之间的顺序关系。
+RNN这种循环的计算方式也带来了新的瓶颈：它必须按顺序处理数据。第 t 个时间步的计算，必须等待第 t−1 个时间步完成后才能开始。&lt;/p&gt;
+&lt;p&gt;Decoder-Only架构与完整的Encoder-Decoder架构有什么区别？为什么现在主流的大语言模型都采用Decoder-Only架构？
+编码器负责深入理解输入的整个句子，形成一个包含全局信息的上下文记忆，然后解码器基于这份记忆来生成翻译
+它完全抛弃了编码器，只保留了解码器部分
+训练目标统一：模型的唯一任务就是“预测下一个词”，这个简单的目标非常适合在海量的无标注文本数据上进行预训练。
+结构简单，易于扩展：更少的组件意味着更容易进行规模化扩展。今天的 GPT-4、Llama 等拥有数千亿甚至万亿参数的巨型模型，都是基于这种简洁的架构。
+天然适合生成任务：其自回归的工作模式与所有生成式任务（对话、写作、代码生成等）完美契合，这也是它能成为构建通用智能体基础的核心原因。&lt;/p&gt;
+&lt;p&gt;3.文本子词分词算法是大语言模型的一项关键技术，负责将文本转换为模型可处理的 token 序列。那为什么不能直接以&amp;quot;字符&amp;quot;或&amp;quot;单词&amp;quot;作为模型的输入单元？BPE（Byte Pair Encoding）算法解决了什么问题？
+统一输入单元：字符级模型过于细粒度，导致序列过长；单词级模型则过于粗粒度，无法处理未登录词（OOV）。
+BPE通过子词分割，提供了一个平衡的输入单元。&lt;/p&gt;
+&lt;p&gt;4.本章3.2.3节介绍了如何本地部署开源大语言模型。请完成以下实践和分析：&lt;/p&gt;
+&lt;p&gt;提示：这是一道动手实践题，建议实际操作&lt;/p&gt;
+&lt;p&gt;按照本章的指导，在本地部署一个轻量级的开源模型（推荐Qwen3-0.6B），并尝试调整采样参数并观察其对输出的影响
+选择一个具体任务（如文本分类、信息抽取、代码生成等），设计并对比以下不同的提示策略（如Zero-shot、Few-shot、Chain-of-Thought）对输出结果的效果差异
+从性能、成本、可控性、隐私等维度比较闭源模型和开源模型
+如果你要构建一个企业级的客服智能体，你会选择哪种类型的模型？需要考虑哪些因素？
+5.模型幻觉（Hallucination）[11]是大语言模型当前存在的关键局限性之一。本章介绍了缓解幻觉的方法（如检索增强生成、多步推理、外部工具调用）&lt;/p&gt;
+&lt;p&gt;请选择其中一种，说明其工作原理和适用场景
+调研前沿的研究和论文，是否还有其他的缓解模型幻觉的方法，他们又有哪些改进和优势？
+6.假设你要设计一个论文辅助阅读智能体，它能够帮助研究人员快速阅读并理解学术论文，包括：总结论文研究的核心内容、回答关于论文的问题、提取关键信息、比较多篇不同论文的观点等。请回答：&lt;/p&gt;
+&lt;p&gt;你会选择哪个模型作为智能体设计时的基座模型？选择时需要考虑哪些因素？
+如何设计提示词来引导模型更好地理解学术论文？学术论文通常很长，可能超过模型的上下文窗口限制，你会如何解决这个问题？
+学术研究是严谨的，这意味着我们需要确保智能体生成的信息是准确客观忠于原文的。你认为系统中加入哪些设计能够更好的实现这一需求？&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Agent 02-智能体发展史</title>
+        <link>https://impself.github.io/p/agent-02-agent-develop/</link>
+        <pubDate>Sun, 15 Feb 2026 12:40:47 +0800</pubDate>
+        
+        <guid>https://impself.github.io/p/agent-02-agent-develop/</guid>
+        <description>&lt;p&gt;本文聚焦智能体从符号主义到大模型驱动范式的关键演进路径。&lt;/p&gt;
+&lt;h2 id=&#34;21-基于符号与逻辑的早期智能体&#34;&gt;2.1 基于符号与逻辑的早期智能体
+&lt;/h2&gt;&lt;h3 id=&#34;物理符号系统假说&#34;&gt;物理符号系统假说
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;论断&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;含义&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;充分性&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;任何物理符号系统都具备产生通用智能行为的充分手段&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;必要性&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;任何展现通用智能行为的系统，本质必然是物理符号系统&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;核心思想：&lt;strong&gt;智能的本质是符号的计算与处理&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;专家系统&#34;&gt;专家系统
+&lt;/h3&gt;&lt;p&gt;由 &lt;strong&gt;知识库&lt;/strong&gt;（IF-THEN规则）和 &lt;strong&gt;推理机&lt;/strong&gt;（正向链/反向链）组成。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;MYCIN&lt;/strong&gt;：血液感染诊断专家系统，约600条规则。创新之处是引入 &lt;strong&gt;置信因子（CF）&lt;/strong&gt; 处理不确定性。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;符号主义的局限&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;常识知识瓶颈&lt;/li&gt;
+&lt;li&gt;框架问题与系统脆弱性&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;shrdlu&#34;&gt;SHRDLU
+&lt;/h3&gt;&lt;p&gt;SHRDLU是积木世界中的自然语言交互智能体，具备：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;自然语言理解（解析复杂指令）&lt;/li&gt;
+&lt;li&gt;指代消解（理解&amp;quot;你手中拿的&amp;quot;）&lt;/li&gt;
+&lt;li&gt;上下文记忆&lt;/li&gt;
+&lt;li&gt;规划与行动（规划动作序列）&lt;/li&gt;
+&lt;li&gt;记忆与问答&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;22-基于规则的聊天机器人&#34;&gt;2.2 基于规则的聊天机器人
+&lt;/h2&gt;&lt;h3 id=&#34;eliza-的设计&#34;&gt;ELIZA 的设计
+&lt;/h3&gt;&lt;p&gt;核心机制：&lt;strong&gt;模式匹配 + 文本替换&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;respond&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user_input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;c1&#34;&gt;# 1. 关键词识别&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;c1&#34;&gt;# 2. 分解（捕获通配符*匹配的内容）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;c1&#34;&gt;# 3. 代词转换（I ↔ you）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;c1&#34;&gt;# 4. 重组生成回应&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;pass&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;局限&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;无语义理解（不理解否定词）&lt;/li&gt;
+&lt;li&gt;无上下文记忆&lt;/li&gt;
+&lt;li&gt;规则扩展导致组合爆炸&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;23-马文明斯基的心智社会&#34;&gt;2.3 马文·明斯基的&amp;quot;心智社会&amp;quot;
+&lt;/h2&gt;&lt;p&gt;核心观点：&lt;strong&gt;智能源于大量简单智能体的协作，而非单一完美系统&lt;/strong&gt;。&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;概念&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;含义&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;智能体（Agent）&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;简单、专门、无心智&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;机构（Agency）&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;协作的智能体集合&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;对多智能体系统（MAS）的启发：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;去中心化控制&lt;/li&gt;
+&lt;li&gt;涌现式计算&lt;/li&gt;
+&lt;li&gt;智能体社会性&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;24-学习范式的演进&#34;&gt;2.4 学习范式的演进
+&lt;/h2&gt;&lt;h3 id=&#34;从符号到联结主义&#34;&gt;从符号到联结主义
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;范式&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;核心思想&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;符号主义&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;知识显式编码为规则&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;联结主义&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;知识以连接权重分布式存储&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;强化学习框架&#34;&gt;强化学习框架
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;五元组 (S, A, P, R, γ)&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;组件&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;说明&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;Agent&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;学习者和决策者&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;Environment&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;智能体外部的一切&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;State (S)&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;环境在某一时刻的描述&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;Action (A)&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;智能体可采取的操作&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;Reward (R)&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;评价行动好坏的标量信号&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;学习循环&lt;/strong&gt;：观察 → 选择行动 → 执行 → 获得奖励 → 调整策略&lt;/p&gt;
+&lt;h3 id=&#34;预训练-微调范式&#34;&gt;预训练-微调范式
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;海量文本 → 自监督学习 → 基础模型
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                              ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                    特定任务数据微调 → 下游任务
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;大语言模型驱动的智能体&#34;&gt;大语言模型驱动的智能体
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;核心组件&lt;/strong&gt;：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;感知模块 → 思考模块(Planning + LLM) → 执行模块 → 工具调用
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ↑                                              ↓
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    └──────────── 观察与记忆更新 ←──────────────────┘
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;阶段&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;功能&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;感知&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;接收用户指令、环境状态&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;思考&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;规划分解、推理决策、工具调用&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;行动&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;执行工具、与环境交互&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;观察&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;获取工具结果、更新记忆&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;发展时间线&#34;&gt;发展时间线
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;时期&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;代表技术&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;1950s-1980s&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;符号主义：专家系统、SHRDLU&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;1980s-2010s&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;联结主义：神经网络复苏、深度学习&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;2010s-至今&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;强化学习 + 预训练-微调 + LLM Agent&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;25-习题解析&#34;&gt;2.5 习题解析
+&lt;/h2&gt;&lt;h3 id=&#34;题-1物理符号系统假说&#34;&gt;题 1：物理符号系统假说
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;Q1&lt;/strong&gt;：充分性论断和必要性论断分别是什么？&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;论断&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;含义&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;充分性&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;任何物理符号系统都具备产生通用智能行为的充分手段&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;必要性&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;任何展现通用智能行为的系统，本质必然是物理符号系统&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Q2&lt;/strong&gt;：符号主义实践中的哪些问题挑战了&amp;quot;充分性&amp;quot;？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;常识问题：依赖庞大的背景知识&lt;/li&gt;
+&lt;li&gt;框架问题：规则静态，无法适应变化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Q3&lt;/strong&gt;：LLM驱动的智能体是否符合该假说？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;不完全符合。LLM通过分布式权重隐式编码知识，而非显式符号规则。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;题-2专家系统mycin&#34;&gt;题 2：专家系统MYCIN
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;Q1&lt;/strong&gt;：为何MYCIN未大规模应用于临床？&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;维度&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;原因&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;技术&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;知识库难以覆盖全部医学知识&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;伦理&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;诊断错误责任归属不明&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;用户接受度&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;医患对非人类系统缺乏信任&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Q2&lt;/strong&gt;：现代医疗诊断智能体如何改进？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;动态知识更新（结合最新研究）&lt;/li&gt;
+&lt;li&gt;个体化诊断（考虑患者差异）&lt;/li&gt;
+&lt;li&gt;可解释性（清晰展示诊断依据）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Q3&lt;/strong&gt;：哪些垂直领域仍适合基于规则的系统？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;法律咨询（规则明确）&lt;/li&gt;
+&lt;li&gt;工业控制（稳定可预测）&lt;/li&gt;
+&lt;li&gt;药物配置（避免相互作用冲突）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;题-3eliza-扩展实践&#34;&gt;题 3：ELIZA 扩展实践
+&lt;/h3&gt;&lt;p&gt;核心扩展：添加 &lt;strong&gt;上下文记忆&lt;/strong&gt; 功能，记住姓名、年龄、职业等信息。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;与ChatGPT的本质差异&lt;/strong&gt;：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;维度&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;ELIZA&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;ChatGPT&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;知识边界&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;固定规则集&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;预训练知识+推理&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;上下文&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;无状态&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;多轮对话连贯&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;开放能力&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;预设场景&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;开放域处理&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;组合爆炸问题&lt;/strong&gt;：假设n个规则、每个规则匹配m种输入，组合数为m^n（指数级增长）。&lt;/p&gt;
+&lt;h3 id=&#34;题-4心智社会理论&#34;&gt;题 4：&amp;ldquo;心智社会&amp;quot;理论
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;Q1&lt;/strong&gt;：GRASP智能体失效会怎样？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;系统失去抓取积木能力，但其他智能体可继续工作。优势是鲁棒性，劣势是整体性能下降。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Q2&lt;/strong&gt;：与现代多智能体系统的关联？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;关联：都体现协作思想、去中心化控制&lt;/li&gt;
+&lt;li&gt;不同：现代系统有更先进的通信协议和学习算法&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Q3&lt;/strong&gt;：LLM时代&amp;quot;心智社会&amp;quot;是否仍适用？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;适用。智能的涌现和协作思想仍是理解多智能体系统的重要框架。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;题-5强化学习与监督学习&#34;&gt;题 5：强化学习与监督学习
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;Q1&lt;/strong&gt;：AlphaGo的&amp;quot;试错学习&amp;quot;机制？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;通过自我对弈不断尝试策略，根据胜负结果调整，优化长期收益。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Q2&lt;/strong&gt;：为何强化学习适合序贯决策？&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;强化学习&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;监督学习&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;关注长期奖励&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;关注单次预测正确&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;与环境交互收集数据&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;需要预标注数据集&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;适合动态环境&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;适合静态模式识别&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Q3&lt;/strong&gt;：RLHF在LLM训练中的作用？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;通过人类反馈强化学习，使模型输出更符合人类期望和偏好。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;题-6预训练-微调范式&#34;&gt;题 6：预训练-微调范式
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;Q1&lt;/strong&gt;：预训练如何解决&amp;quot;知识获取瓶颈&amp;rdquo;？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;符号主义：专家手工编码规则&lt;/li&gt;
+&lt;li&gt;预训练：从数据中自动学习，分布式表示知识&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Q2&lt;/strong&gt;：互联网数据带来的问题及缓解？&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;问题&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;缓解措施&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;错误信息&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;数据清洗&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;偏见&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;偏见检测与修正&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;知识过时&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;持续更新&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;题-7智能代码审查助手&#34;&gt;题 7：智能代码审查助手
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;三个时代的设计对比&lt;/strong&gt;：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;时代&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;方案&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;困难&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;符号主义&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;手工编码规则&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;知识获取瓶颈、脆弱性&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;深度学习(2015)&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;特征工程+分类器&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;特征设计难、泛化能力弱&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;LLM时代&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;感知+思考+执行模块&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;架构复杂度&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;演进意义&lt;/strong&gt;：从&amp;quot;几乎不可能&amp;quot;到&amp;quot;可行&amp;quot;，核心是 &lt;strong&gt;理解和推理能力&lt;/strong&gt; 的质变。&lt;/p&gt;
+&lt;h2 id=&#34;小结&#34;&gt;小结
+&lt;/h2&gt;&lt;p&gt;智能体发展史是一场关于&amp;quot;如何定义智能、获取知识、进行决策&amp;quot;的思想变革：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;符号主义&lt;/strong&gt;：显式规则 → 知识获取瓶颈&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;联结主义&lt;/strong&gt;：分布式表示 → 感知能力突破&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;强化学习&lt;/strong&gt;：试错交互 → 决策能力突破&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;LLM Agent&lt;/strong&gt;：感知-思考-行动闭环 → 通用智能雏形&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        <item>
         <title>Agent 01-初识智能体</title>
         <link>https://impself.github.io/p/agent-01-initial-agent/</link>
         <pubDate>Fri, 13 Feb 2026 13:12:43 +0800</pubDate>
