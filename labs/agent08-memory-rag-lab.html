@@ -1,0 +1,194 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent08 Memory/RAG Lab</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #111b34;
+      --ink: #e2e8f0;
+      --muted: #93a4c2;
+      --accent: #14b8a6;
+      --line: #2a3a62;
+    }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at 20% -10%, #1e293b, #0b1020 65%);
+      min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 { margin: 0 0 8px; }
+    p.sub { margin: 0 0 18px; color: var(--muted); }
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .card {
+      background: linear-gradient(165deg, #14203d, #0f1930);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    input[type="range"], textarea {
+      width: 100%;
+      margin-top: 4px;
+    }
+    textarea {
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #0b1429;
+      color: var(--ink);
+      padding: 10px;
+      box-sizing: border-box;
+      min-height: 110px;
+      resize: vertical;
+    }
+    button {
+      margin-top: 10px;
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #002220;
+      background: linear-gradient(90deg, #2dd4bf, #22c55e);
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .result {
+      margin-top: 10px;
+      font-size: 15px;
+    }
+    .tip {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Agent08 Memory/RAG Lab</h1>
+    <p class="sub">用于学习记忆保留评分、检索路由、MQE/HyDE 策略选择的独立交互面板。</p>
+
+    <div class="grid">
+      <section class="card">
+        <h2>记忆保留评分</h2>
+        <label>重要性 importance: <span id="impVal">0.70</span></label>
+        <input id="imp" type="range" min="0" max="1" step="0.01" value="0.70" />
+
+        <label>访问次数 access_count: <span id="accVal">6</span></label>
+        <input id="acc" type="range" min="0" max="30" step="1" value="6" />
+
+        <label>距上次访问天数 days_since_access: <span id="daysVal">12</span></label>
+        <input id="days" type="range" min="0" max="120" step="1" value="12" />
+
+        <p class="result">保留分数: <b id="score">0.000</b></p>
+        <p class="result">系统建议: <b id="decision">保留</b></p>
+      </section>
+
+      <section class="card">
+        <h2>智能路由</h2>
+        <textarea id="query">我上次学到 RAG 重排那一步了，下一步该复习什么？</textarea>
+        <button id="routeBtn">分析路由</button>
+        <p class="result">路由结果: <b id="route">hybrid</b></p>
+        <p class="tip">规则: 用户历史信号 -> Memory；外部知识信号 -> RAG；同时出现 -> Hybrid。</p>
+      </section>
+
+      <section class="card">
+        <h2>检索策略建议</h2>
+        <label>问题清晰度 query clarity: <span id="clarityVal">0.45</span></label>
+        <input id="clarity" type="range" min="0" max="1" step="0.01" value="0.45" />
+
+        <label>领域术语密度 term density: <span id="termVal">0.80</span></label>
+        <input id="term" type="range" min="0" max="1" step="0.01" value="0.80" />
+
+        <label>语义跳跃程度 semantic gap: <span id="gapVal">0.65</span></label>
+        <input id="gap" type="range" min="0" max="1" step="0.01" value="0.65" />
+
+        <p class="result">建议策略: <b id="strategy">HyDE</b></p>
+        <p class="tip">经验规则: 清晰度高用基础检索；歧义高用 MQE；语义跳跃大用 HyDE。</p>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const $ = (id) => document.getElementById(id);
+
+      function retentionScore(importance, accessCount, days) {
+        const freq = Math.min(accessCount / 20, 1);
+        const decay = Math.exp(-days / 30);
+        return 0.45 * importance + 0.25 * freq + 0.20 * decay + 0.10 * 0.5;
+      }
+
+      function updateMemoryPanel() {
+        const imp = parseFloat($("imp").value);
+        const acc = parseInt($("acc").value, 10);
+        const days = parseInt($("days").value, 10);
+
+        $("impVal").textContent = imp.toFixed(2);
+        $("accVal").textContent = String(acc);
+        $("daysVal").textContent = String(days);
+
+        const score = retentionScore(imp, acc, days);
+        $("score").textContent = score.toFixed(3);
+        $("decision").textContent = score < 0.35 ? "遗忘/归档" : "保留";
+      }
+
+      function routeQuery(query) {
+        const hasMemory = /我|上次|之前|我的|学到哪|历史/.test(query);
+        const hasRag = /什么是|原理|定义|文档|标准|如何实现/.test(query);
+        if (hasMemory && hasRag) return "hybrid";
+        if (hasMemory) return "memory";
+        return "rag";
+      }
+
+      function updateStrategy() {
+        const clarity = parseFloat($("clarity").value);
+        const term = parseFloat($("term").value);
+        const gap = parseFloat($("gap").value);
+
+        $("clarityVal").textContent = clarity.toFixed(2);
+        $("termVal").textContent = term.toFixed(2);
+        $("gapVal").textContent = gap.toFixed(2);
+
+        let strategy = "基础检索";
+        if (gap > 0.60) strategy = "HyDE";
+        else if (clarity < 0.55 || term > 0.65) strategy = "MQE";
+
+        $("strategy").textContent = strategy;
+      }
+
+      ["imp", "acc", "days"].forEach((id) => $(id).addEventListener("input", updateMemoryPanel));
+      ["clarity", "term", "gap"].forEach((id) => $(id).addEventListener("input", updateStrategy));
+      $("routeBtn").addEventListener("click", () => {
+        $("route").textContent = routeQuery($("query").value.trim());
+      });
+
+      updateMemoryPanel();
+      updateStrategy();
+      $("route").textContent = routeQuery($("query").value.trim());
+    })();
+  </script>
+</body>
+</html>

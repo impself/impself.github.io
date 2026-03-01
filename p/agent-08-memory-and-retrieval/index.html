@@ -1,0 +1,2908 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="介绍记忆系统（Memory System）和检索增强生成（Retrieval-Augmented Generation, RAG）。采用\"框架扩展 + 知识科普\"的方式，在构建过程中深入理解Memory和RAG的理论基础，最终实现一个具有完整记忆和知识检索能力的智能体系统。">
+<title>Agent 08-记忆与检索</title>
+
+<link rel='canonical' href='https://impself.github.io/p/agent-08-memory-and-retrieval/'>
+
+<link rel="stylesheet" href="/scss/style.min.94a091a235bf4cfab80ae319933a593529e2ee31ace7858746e3b3fad30e61b7.css"><meta property='og:title' content="Agent 08-记忆与检索">
+<meta property='og:description' content="介绍记忆系统（Memory System）和检索增强生成（Retrieval-Augmented Generation, RAG）。采用\"框架扩展 + 知识科普\"的方式，在构建过程中深入理解Memory和RAG的理论基础，最终实现一个具有完整记忆和知识检索能力的智能体系统。">
+<meta property='og:url' content='https://impself.github.io/p/agent-08-memory-and-retrieval/'>
+<meta property='og:site_name' content='impself小破站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Agent' /><meta property='article:tag' content='AI' /><meta property='article:published_time' content='2026-02-26T21:42:09&#43;08:00'/><meta property='article:modified_time' content='2026-02-26T21:42:09&#43;08:00'/>
+<meta name="twitter:title" content="Agent 08-记忆与检索">
+<meta name="twitter:description" content="介绍记忆系统（Memory System）和检索增强生成（Retrieval-Augmented Generation, RAG）。采用\"框架扩展 + 知识科普\"的方式，在构建过程中深入理解Memory和RAG的理论基础，最终实现一个具有完整记忆和知识检索能力的智能体系统。">
+    <link rel="shortcut icon" href="/img/you2.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/scss/custom.min.28be12c7a518ab917c7da96011bc7634f0fde160cef656e54132a7353e9a9373.css" integrity="sha256-KL4Sx6UYq5F8falgEbx2NPD94WDO9lblQTKnNT6ak3M=">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/you2_hu_638602a613500777.jpg" width="300"
+                            height="299" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">impself小破站</a></h1>
+            <h2 class="site-description">XDUer，擅长面向搜索引擎编程，AI编程，golang初学者，agent小白</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/impself'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://google.com'
+                        target="_blank"
+                        title="Google"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-google"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20.945 11a9 9 0 1 1 -3.284 -5.997l-2.655 2.392a5.5 5.5 0 1 0 2.119 6.605h-4.125v-3h7.945" /></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://space.bilibili.com/1262668861'
+                        target="_blank"
+                        title="Bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-bilibili"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6" /><path d="M8 3l2 3" /><path d="M16 3l-2 3" /><path d="M9 13v-2" /><path d="M15 11v2" /></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://v.douyin.com/TfK7Cbs7r-8/'
+                        target="_blank"
+                        title="Douyin"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-tiktok"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M21 7.917v4.034a9.948 9.948 0 0 1 -5 -1.951v4.5a6.5 6.5 0 1 1 -8 -6.326v4.326a2.5 2.5 0 1 0 4 2v-11.5h4.083a6.005 6.005 0 0 0 4.917 4.917" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#目录">目录</a></li>
+    <li><a href="#1-情景记忆-vs-语义记忆评分机制对比">1. 情景记忆 vs 语义记忆评分机制对比</a>
+      <ol>
+        <li><a href="#评分公式对比">评分公式对比</a></li>
+        <li><a href="#设计原因分析">设计原因分析</a></li>
+        <li><a href="#核心设计理念">核心设计理念</a></li>
+      </ol>
+    </li>
+    <li><a href="#2-个人健康管理助手的记忆设计">2. 个人健康管理助手的记忆设计</a>
+      <ol>
+        <li><a href="#整体架构">整体架构</a></li>
+        <li><a href="#具体应用场景">具体应用场景</a></li>
+        <li><a href="#数据流向示例">数据流向示例</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-工作记忆整合机制设计">3. 工作记忆整合机制设计</a>
+      <ol>
+        <li><a href="#整合决策矩阵">整合决策矩阵</a></li>
+        <li><a href="#自动整合算法实现">自动整合算法实现</a></li>
+      </ol>
+    </li>
+    <li><a href="#4-基于语义边界的分块算法">4. 基于语义边界的分块算法</a>
+      <ol>
+        <li><a href="#问题背景">问题背景</a></li>
+        <li><a href="#语义边界检测算法">语义边界检测算法</a></li>
+        <li><a href="#不同文档类型的分块策略">不同文档类型的分块策略</a></li>
+      </ol>
+    </li>
+    <li><a href="#5-mqe-vs-hyde-检索策略对比">5. MQE vs HyDE 检索策略对比</a>
+      <ol>
+        <li><a href="#检索方法对比">检索方法对比</a></li>
+        <li><a href="#场景选择矩阵">场景选择矩阵</a></li>
+        <li><a href="#实际场景效果对比">实际场景效果对比</a></li>
+      </ol>
+    </li>
+    <li><a href="#6-嵌入方案选型对比">6. 嵌入方案选型对比</a>
+      <ol>
+        <li><a href="#三种方案全面对比">三种方案全面对比</a></li>
+        <li><a href="#选型决策树">选型决策树</a></li>
+        <li><a href="#混合方案建议">混合方案建议</a></li>
+      </ol>
+    </li>
+    <li><a href="#7-智能遗忘策略实现">7. 智能遗忘策略实现</a>
+      <ol>
+        <li><a href="#多因素加权遗忘算法">多因素加权遗忘算法</a></li>
+        <li><a href="#遗忘决策阈值">遗忘决策阈值</a></li>
+      </ol>
+    </li>
+    <li><a href="#8-记忆归档机制设计">8. 记忆归档机制设计</a>
+      <ol>
+        <li><a href="#记忆生命周期管理">记忆生命周期管理</a></li>
+        <li><a href="#归档实现示例">归档实现示例</a></li>
+      </ol>
+    </li>
+    <li><a href="#9-隐私数据彻底清除方案">9. 隐私数据彻底清除方案</a>
+      <ol>
+        <li><a href="#多层验证清除机制">多层验证清除机制</a></li>
+        <li><a href="#实现代码">实现代码</a></li>
+      </ol>
+    </li>
+    <li><a href="#10-rag-vs-memory-智能路由">10. RAG vs Memory 智能路由</a>
+      <ol>
+        <li><a href="#智能路由机制">智能路由机制</a></li>
+        <li><a href="#路由决策表">路由决策表</a></li>
+      </ol>
+    </li>
+    <li><a href="#11-智能学习报告生成器设计">11. 智能学习报告生成器设计</a>
+      <ol>
+        <li><a href="#报告生成器架构">报告生成器架构</a></li>
+        <li><a href="#报告结构示例">报告结构示例</a></li>
+      </ol>
+    </li>
+    <li><a href="#12-多用户数据隔离方案">12. 多用户数据隔离方案</a>
+      <ol>
+        <li><a href="#qdrant-隔离方案">Qdrant 隔离方案</a></li>
+        <li><a href="#neo4j-隔离方案">Neo4j 隔离方案</a></li>
+        <li><a href="#性能优化策略">性能优化策略</a></li>
+      </ol>
+    </li>
+    <li><a href="#13-知识图谱质量评估">13. 知识图谱质量评估</a>
+      <ol>
+        <li><a href="#质量评估维度">质量评估维度</a></li>
+        <li><a href="#常见错误类型">常见错误类型</a></li>
+      </ol>
+    </li>
+    <li><a href="#14-图检索-vs-向量检索对比">14. 图检索 vs 向量检索对比</a>
+      <ol>
+        <li><a href="#查询类型对比表">查询类型对比表</a></li>
+        <li><a href="#混合检索示例">混合检索示例</a></li>
+        <li><a href="#图检索优势场景">图检索优势场景</a></li>
+      </ol>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/agent-dev/" style="background-color: #2a9d8f; color: #fff;">
+                Agent开发
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/agent-08-memory-and-retrieval/">Agent 08-记忆与检索</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            介绍记忆系统（Memory System）和检索增强生成（Retrieval-Augmented Generation, RAG）。采用&#34;框架扩展 &#43; 知识科普&#34;的方式，在构建过程中深入理解Memory和RAG的理论基础，最终实现一个具有完整记忆和知识检索能力的智能体系统。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published" datetime='2026-02-26T21:42:09&#43;08:00'>Feb 26, 2026</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 16 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="智能体记忆系统与rag系统---问题详解">智能体记忆系统与RAG系统 - 问题详解
+</h1><h2 id="目录">目录
+</h2><ol>
+<li><a class="link" href="#1-%e6%83%85%e6%99%af%e8%ae%b0%e5%bf%86-vs-%e8%af%ad%e4%b9%89%e8%ae%b0%e5%bf%86%e8%af%84%e5%88%86%e6%9c%ba%e5%88%b6%e5%af%b9%e6%af%94" >情景记忆 vs 语义记忆评分机制对比</a></li>
+<li><a class="link" href="#2-%e4%b8%aa%e4%ba%ba%e5%81%a5%e5%ba%b7%e7%ae%a1%e7%90%86%e5%8a%a9%e6%89%8b%e7%9a%84%e8%ae%b0%e5%bf%86%e8%ae%be%e8%ae%a1" >个人健康管理助手的记忆设计</a></li>
+<li><a class="link" href="#3-%e5%b7%a5%e4%bd%9c%e8%ae%b0%e5%bf%86%e6%95%b4%e5%90%88%e6%9c%ba%e5%88%b6%e8%ae%be%e8%ae%a1" >工作记忆整合机制设计</a></li>
+<li><a class="link" href="#4-%e5%9f%ba%e4%ba%8e%e8%af%ad%e4%b9%89%e8%be%b9%e7%95%8c%e7%9a%84%e5%88%86%e5%9d%97%e7%ae%97%e6%b3%95" >基于语义边界的分块算法</a></li>
+<li><a class="link" href="#5-mqe-vs-hyde-%e6%a3%80%e7%b4%a2%e7%ad%96%e7%95%a5%e5%af%b9%e6%af%94" >MQE vs HyDE 检索策略对比</a></li>
+<li><a class="link" href="#6-%e5%b5%8c%e5%85%a5%e6%96%b9%e6%a1%88%e9%80%89%e5%9e%8b%e5%af%b9%e6%af%94" >嵌入方案选型对比</a></li>
+<li><a class="link" href="#7-%e6%99%ba%e8%83%bd%e9%81%97%e5%bf%98%e7%ad%96%e7%95%a5%e5%ae%9e%e7%8e%b0" >智能遗忘策略实现</a></li>
+<li><a class="link" href="#8-%e8%ae%b0%e5%bf%86%e5%bd%92%e6%a1%a3%e6%9c%ba%e5%88%b6%e8%ae%be%e8%ae%a1" >记忆归档机制设计</a></li>
+<li><a class="link" href="#9-%e9%9a%90%e7%a7%81%e6%95%b0%e6%8d%ae%e5%bd%bb%e5%ba%95%e6%b8%85%e9%99%a4%e6%96%b9%e6%a1%88" >隐私数据彻底清除方案</a></li>
+<li><a class="link" href="#10-rag-vs-memory-%e6%99%ba%e8%83%bd%e8%b7%af%e7%94%b1" >RAG vs Memory 智能路由</a></li>
+<li><a class="link" href="#11-%e6%99%ba%e8%83%bd%e5%ad%a6%e4%b9%a0%e6%8a%a5%e5%91%8a%e7%94%9f%e6%88%90%e5%99%a8%e8%ae%be%e8%ae%a1" >智能学习报告生成器设计</a></li>
+<li><a class="link" href="#12-%e5%a4%9a%e7%94%a8%e6%88%b7%e6%95%b0%e6%8d%ae%e9%9a%94%e7%a6%bb%e6%96%b9%e6%a1%88" >多用户数据隔离方案</a></li>
+<li><a class="link" href="#13-%e7%9f%a5%e8%af%86%e5%9b%be%e8%b0%b1%e8%b4%a8%e9%87%8f%e8%af%84%e4%bc%b0" >知识图谱质量评估</a></li>
+<li><a class="link" href="#14-%e5%9b%be%e6%a3%80%e7%b4%a2-vs-%e5%90%91%e9%87%8f%e6%a3%80%e7%b4%a2%e5%af%b9%e6%af%94" >图检索 vs 向量检索对比</a></li>
+</ol>
+<hr>
+<h2 id="1-情景记忆-vs-语义记忆评分机制对比">1. 情景记忆 vs 语义记忆评分机制对比
+</h2><h3 id="评分公式对比">评分公式对比
+</h3><p><strong>情景记忆评分公式：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">score = 0.4 × recency + 0.3 × importance + 0.2 × access + 0.1 × embedding
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>语义记忆评分公式：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">score = 0.3 × graph_retrieval + 0.25 × embedding + 0.25 × access + 0.2 × importance
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="设计原因分析">设计原因分析
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>情景记忆</th>
+          <th>语义记忆</th>
+          <th>设计原因</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>时间权重 (recency)</td>
+          <td><strong>0.4</strong></td>
+          <td>0.0</td>
+          <td>情景记忆记录&quot;我在何时何地做了什么&quot;，新鲜度至关重要；语义记忆是持久知识，与时间无关</td>
+      </tr>
+      <tr>
+          <td>图检索权重 (graph_retrieval)</td>
+          <td>0.0</td>
+          <td><strong>0.3</strong></td>
+          <td>语义记忆基于知识图谱，概念间的关系推理是核心优势</td>
+      </tr>
+      <tr>
+          <td>嵌入权重 (embedding)</td>
+          <td>0.1</td>
+          <td>0.25</td>
+          <td>语义记忆更注重语义相似性匹配</td>
+      </tr>
+      <tr>
+          <td>重要性权重 (importance)</td>
+          <td>0.3</td>
+          <td>0.2</td>
+          <td>情景记忆中某些事件可能特别重要（如里程碑事件）</td>
+      </tr>
+      <tr>
+          <td>访问权重 (access)</td>
+          <td>0.2</td>
+          <td>0.25</td>
+          <td>两者都考虑访问频率，但语义记忆更重视知识的复用</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="核心设计理念">核心设计理念
+</h3><p><strong>情景记忆 = &ldquo;时间线上的故事&rdquo;</strong></p>
+<ul>
+<li>强调时间近因性：最近发生的事情更相关</li>
+<li>类比人类的短期事件记忆</li>
+<li>适用于：&ldquo;我昨天看了什么电影？&ldquo;这类查询</li>
+</ul>
+<p><strong>语义记忆 = &ldquo;知识网络中的概念&rdquo;</strong></p>
+<ul>
+<li>强调关系推理：通过图结构发现关联</li>
+<li>类比人类的知识体系</li>
+<li>适用于：&ldquo;什么是深度学习？&ldquo;这类概念查询</li>
+</ul>
+<hr>
+<h2 id="2-个人健康管理助手的记忆设计">2. 个人健康管理助手的记忆设计
+</h2><h3 id="整体架构">整体架构
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">┌─────────────────────────────────────────────────────────────┐
+</span></span><span class="line"><span class="cl">│                   个人健康管理助手                            │
+</span></span><span class="line"><span class="cl">├─────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">│  工作记忆              情景记忆              语义记忆         │
+</span></span><span class="line"><span class="cl">│  ┌─────────┐        ┌─────────┐        ┌─────────┐         │
+</span></span><span class="line"><span class="cl">│  │当前对话│        │饮食记录 │        │营养知识 │         │
+</span></span><span class="line"><span class="cl">│  │输入状态 │        │运动日志 │        │医学概念 │         │
+</span></span><span class="line"><span class="cl">│  │暂存数据 │        │睡眠数据 │        │健康图谱 │         │
+</span></span><span class="line"><span class="cl">│  └─────────┘        └─────────┘        └─────────┘         │
+</span></span><span class="line"><span class="cl">│       ↓                  ↓                  ↓                │
+</span></span><span class="line"><span class="cl">│  TTL=5分钟         重要性衰减          知识推理             │
+</span></span><span class="line"><span class="cl">│                                                ↑            │
+</span></span><span class="line"><span class="cl">│  感知记忆 ────────────────────────────────────┘            │
+</span></span><span class="line"><span class="cl">│  ┌─────────┐                                                 │
+</span></span><span class="line"><span class="cl">│  │设备数据 │  实时同步：心率、步数、血氧、体温                │
+</span></span><span class="line"><span class="cl">│  │环境数据 │  定期采样：天气、空气质量、季节                   │
+</span></span><span class="line"><span class="cl">│  └─────────┘                                                 │
+</span></span><span class="line"><span class="cl">└─────────────────────────────────────────────────────────────┘
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="具体应用场景">具体应用场景
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>记忆类型</th>
+          <th>应用场景</th>
+          <th>数据示例</th>
+          <th>检索示例</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>工作记忆</strong></td>
+          <td>对话状态管理</td>
+          <td>用户当前输入的饮食内容</td>
+          <td>&ldquo;我刚才说今天早餐吃了什么？&rdquo;</td>
+      </tr>
+      <tr>
+          <td><strong>情景记忆</strong></td>
+          <td>健康行为追踪</td>
+          <td>&ldquo;2024-01-15早餐：燕麦牛奶&rdquo;</td>
+          <td>&ldquo;上周三的跑步记录是什么？&rdquo;</td>
+      </tr>
+      <tr>
+          <td><strong>语义记忆</strong></td>
+          <td>健康知识推理</td>
+          <td>&ldquo;缺乏维生素D → 需要晒太阳&rdquo;</td>
+          <td>&ldquo;素食者容易缺乏什么营养素？&rdquo;</td>
+      </tr>
+      <tr>
+          <td><strong>感知记忆</strong></td>
+          <td>实时数据流</td>
+          <td>手环心率：85 bpm</td>
+          <td>&ldquo;我当前心率是多少？&rdquo;</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="数据流向示例">数据流向示例
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">用户说：&#34;我今天跑步了5公里&#34;
+</span></span><span class="line"><span class="cl">    ↓
+</span></span><span class="line"><span class="cl">┌─────────────────┐
+</span></span><span class="line"><span class="cl">│  工作记忆（暂存） │ ← 存储原始输入
+</span></span><span class="line"><span class="cl">└─────────────────┘
+</span></span><span class="line"><span class="cl">    ↓ (5分钟后未提及)
+</span></span><span class="line"><span class="cl">┌─────────────────┐
+</span></span><span class="line"><span class="cl">│  整合到情景记忆  │ ← &#34;2024-01-20 跑步5公里，耗时30分钟&#34;
+</span></span><span class="line"><span class="cl">└─────────────────┘
+</span></span><span class="line"><span class="cl">    ↓ (与历史数据关联)
+</span></span><span class="line"><span class="cl">┌─────────────────┐
+</span></span><span class="line"><span class="cl">│  更新语义记忆    │ ← &#34;用户每周运动3次，属于活跃用户&#34;
+</span></span><span class="line"><span class="cl">└─────────────────┘
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="3-工作记忆整合机制设计">3. 工作记忆整合机制设计
+</h2><h3 id="整合决策矩阵">整合决策矩阵
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">┌────────────────────────────────────────────────────────────┐
+</span></span><span class="line"><span class="cl">│                    工作记忆 → 长期记忆 整合触发条件             │
+</span></span><span class="line"><span class="cl">├────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">│  触发信号            │  整合目标           │  延迟           │
+</span></span><span class="line"><span class="cl">│  ─────────────        │  ─────────         │  ────           │
+</span></span><span class="line"><span class="cl">│  用户明确要求记住      │  → 情景记忆         │  立即            │
+</span></span><span class="line"><span class="cl">│  对话中反复提及(≥3次)  │  → 语义记忆         │  第3次触发       │
+</span></span><span class="line"><span class="cl">│  与现有知识关联        │  → 语义记忆(关联)   │  匹配时          │
+</span></span><span class="line"><span class="cl">│  情感标记(重要/紧急)   │  → 情景记忆(高重要性)│ 检测时          │
+</span></span><span class="line"><span class="cl">│  时间窗口持续(&gt;1小时)  │  → 模式识别         │  到期触发         │
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">└─────────────────────────────────────────────────────────────┘
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="自动整合算法实现">自动整合算法实现
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">MemoryConsolidation</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;工作记忆整合机制&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">should_consolidate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">work_item</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;判断工作记忆是否需要整合&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="n">reasons</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 1. 用户明确指示 (最高优先级)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">work_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;explicit_remember&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">{</span><span class="s2">&#34;action&#34;</span><span class="p">:</span> <span class="s2">&#34;immediate&#34;</span><span class="p">,</span> <span class="s2">&#34;target&#34;</span><span class="p">:</span> <span class="s2">&#34;episodic&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 2. 提及频率检测</span>
+</span></span><span class="line"><span class="cl">        <span class="n">mention_count</span> <span class="o">=</span> <span class="n">work_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;mention_count&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">mention_count</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">score</span> <span class="o">+=</span> <span class="mf">0.4</span>
+</span></span><span class="line"><span class="cl">            <span class="n">reasons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&#34;频繁提及&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">{</span><span class="s2">&#34;action&#34;</span><span class="p">:</span> <span class="s2">&#34;consolidate&#34;</span><span class="p">,</span> <span class="s2">&#34;target&#34;</span><span class="p">:</span> <span class="s2">&#34;semantic&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 3. 知识关联检测</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_related_knowledge</span><span class="p">(</span><span class="n">work_item</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">score</span> <span class="o">+=</span> <span class="mf">0.3</span>
+</span></span><span class="line"><span class="cl">            <span class="n">reasons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&#34;存在关联知识&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 4. 情感重要性检测</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sentiment</span> <span class="o">=</span> <span class="n">work_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;sentiment&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">sentiment</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&#34;urgent&#34;</span><span class="p">,</span> <span class="s2">&#34;important&#34;</span><span class="p">,</span> <span class="s2">&#34;emotional&#34;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">score</span> <span class="o">+=</span> <span class="mf">0.5</span>
+</span></span><span class="line"><span class="cl">            <span class="n">reasons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&#34;情感标记&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">{</span><span class="s2">&#34;action&#34;</span><span class="p">:</span> <span class="s2">&#34;immediate&#34;</span><span class="p">,</span> <span class="s2">&#34;target&#34;</span><span class="p">:</span> <span class="s2">&#34;episodic&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 5. 时间阈值检测</span>
+</span></span><span class="line"><span class="cl">        <span class="n">age_seconds</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">work_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;created_at&#34;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">age_seconds</span> <span class="o">&gt;</span> <span class="mi">3600</span><span class="p">:</span>  <span class="c1"># 1小时</span>
+</span></span><span class="line"><span class="cl">            <span class="n">score</span> <span class="o">+=</span> <span class="mf">0.2</span>
+</span></span><span class="line"><span class="cl">            <span class="n">reasons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&#34;时间阈值&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 综合判断</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;action&#34;</span><span class="p">:</span> <span class="s2">&#34;consolidate&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;target&#34;</span><span class="p">:</span> <span class="s2">&#34;semantic&#34;</span> <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="mf">0.6</span> <span class="k">else</span> <span class="s2">&#34;episodic&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;reasons&#34;</span><span class="p">:</span> <span class="n">reasons</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">{</span><span class="s2">&#34;action&#34;</span><span class="p">:</span> <span class="s2">&#34;keep&#34;</span><span class="p">,</span> <span class="s2">&#34;score&#34;</span><span class="p">:</span> <span class="n">score</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_has_related_knowledge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;检测是否与现有知识关联&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 检查实体重叠</span>
+</span></span><span class="line"><span class="cl">        <span class="n">item_entities</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;entities&#34;</span><span class="p">,</span> <span class="p">[]))</span>
+</span></span><span class="line"><span class="cl">        <span class="n">context_entities</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;recent_entities&#34;</span><span class="p">,</span> <span class="p">[]))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">overlap</span> <span class="o">=</span> <span class="n">item_entities</span> <span class="o">&amp;</span> <span class="n">context_entities</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="4-基于语义边界的分块算法">4. 基于语义边界的分块算法
+</h2><h3 id="问题背景">问题背景
+</h3><p>对于没有明确标题结构的文档（如小说、法律条文），传统的基于Markdown标题的分块策略失效，需要基于语义边界进行智能分块。</p>
+<h3 id="语义边界检测算法">语义边界检测算法
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sentence_transformers</span> <span class="kn">import</span> <span class="n">SentenceTransformer</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">SemanticChunker</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;基于语义边界的智能分块&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&#34;paraphrase-multilingual-MiniLM&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">max_chunk_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">min_chunk_size</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        主分块方法
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Args:
+</span></span></span><span class="line"><span class="cl"><span class="s2">            text: 输入文本
+</span></span></span><span class="line"><span class="cl"><span class="s2">            max_chunk_size: 最大块大小（字符数）
+</span></span></span><span class="line"><span class="cl"><span class="s2">            min_chunk_size: 最小块大小（字符数）
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 1. 按句子分割</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sentences</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 2. 计算句子嵌入</span>
+</span></span><span class="line"><span class="cl">        <span class="n">embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 3. 检测语义边界</span>
+</span></span><span class="line"><span class="cl">        <span class="n">boundaries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detect_boundaries</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 4. 在边界处创建chunks</span>
+</span></span><span class="line"><span class="cl">        <span class="n">chunks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_chunks</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">sentences</span><span class="p">,</span> <span class="n">boundaries</span><span class="p">,</span> <span class="n">max_chunk_size</span><span class="p">,</span> <span class="n">min_chunk_size</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">chunks</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_detect_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        检测语义边界
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">        核心思想：如果相邻两个窗口内的语义相似度都显著高于跨边界的相似度，
+</span></span></span><span class="line"><span class="cl"><span class="s2">        则认为此处存在语义边界。
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">boundaries</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># 第一个句子总是边界</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">window_size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span> <span class="o">-</span> <span class="n">window_size</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># 计算前窗口内的平均相似度</span>
+</span></span><span class="line"><span class="cl">            <span class="n">before_window</span> <span class="o">=</span> <span class="n">embeddings</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">window_size</span><span class="p">:</span><span class="n">i</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="n">before_similarity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_avg_similarity</span><span class="p">(</span><span class="n">before_window</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="c1"># 计算后窗口内的平均相似度</span>
+</span></span><span class="line"><span class="cl">            <span class="n">after_window</span> <span class="o">=</span> <span class="n">embeddings</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">window_size</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="n">after_similarity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_avg_similarity</span><span class="p">(</span><span class="n">after_window</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="c1"># 计算跨边界的相似度</span>
+</span></span><span class="line"><span class="cl">            <span class="n">cross_similarity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosine_sim</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                <span class="n">before_window</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">after_window</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="c1"># 判断是否为边界：跨边界相似度显著低于窗口内相似度</span>
+</span></span><span class="line"><span class="cl">            <span class="n">avg_window_sim</span> <span class="o">=</span> <span class="p">(</span><span class="n">before_similarity</span> <span class="o">+</span> <span class="n">after_similarity</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">cross_similarity</span> <span class="o">&lt;</span> <span class="n">threshold</span> <span class="o">*</span> <span class="n">avg_window_sim</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">boundaries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">boundaries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">embeddings</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">boundaries</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_avg_similarity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;计算嵌入序列内的平均相似度&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="mf">1.0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">similarities</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_cosine_sim</span><span class="p">(</span><span class="n">embeddings</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">embeddings</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">similarities</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_cosine_sim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;计算余弦相似度&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="不同文档类型的分块策略">不同文档类型的分块策略
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>文档类型</th>
+          <th>分块策略</th>
+          <th>实现要点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>小说</strong></td>
+          <td>章节边界 + 场景转换</td>
+          <td>检测&quot;第X章&quot;模式 + 对话/叙述交替</td>
+      </tr>
+      <tr>
+          <td><strong>法律条文</strong></td>
+          <td>条款边界 + 层级结构</td>
+          <td>检测&quot;第X条&quot;模式 + 缩进层级</td>
+      </tr>
+      <tr>
+          <td><strong>学术论文</strong></td>
+          <td>章节结构 + 段落完整性</td>
+          <td>Markdown标题 + 段落边界</td>
+      </tr>
+      <tr>
+          <td><strong>技术文档</strong></td>
+          <td>代码块独立 + API分组</td>
+          <td>识别代码块 + 按功能分组</td>
+      </tr>
+      <tr>
+          <td><strong>新闻文章</strong></td>
+          <td>段落语义连贯性</td>
+          <td>语义边界检测</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="5-mqe-vs-hyde-检索策略对比">5. MQE vs HyDE 检索策略对比
+</h2><h3 id="检索方法对比">检索方法对比
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>检索方法</th>
+          <th>原理</th>
+          <th>查询示例</th>
+          <th>优缺点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>基础检索</strong></td>
+          <td>直接查询embedding</td>
+          <td>&ldquo;如何配置API密钥？&rdquo;</td>
+          <td>✅ 简单快速 ❌ 召回率低</td>
+      </tr>
+      <tr>
+          <td><strong>MQE</strong></td>
+          <td>多查询扩展</td>
+          <td>→ [&ldquo;如何配置API密钥？&rdquo;, &ldquo;如何设置密钥？&rdquo;, &ldquo;在哪里配置凭证？&rdquo;]</td>
+          <td>✅ 召回率高 ⚠️ 融合复杂</td>
+      </tr>
+      <tr>
+          <td><strong>HyDE</strong></td>
+          <td>假设文档嵌入</td>
+          <td>→ 生成假设文档，用假设文档embedding检索</td>
+          <td>✅ 精确度高 ❌ 依赖生成质量</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="场景选择矩阵">场景选择矩阵
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">┌─────────────────────────────────────────────────────────────┐
+</span></span><span class="line"><span class="cl">│                    检索策略选型指南                           │
+</span></span><span class="line"><span class="cl">├─────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">│  查询类型             │  最佳策略          │  原因          │
+</span></span><span class="line"><span class="cl">│  ──────────             │  ─────────         │  ────          │
+</span></span><span class="line"><span class="cl">│  精确术语查询            │  基础检索          │  术语明确，无需扩展│
+</span></span><span class="line"><span class="cl">│  模糊/口语化查询         │  MQE               │  多样化表达提高召回│
+</span></span><span class="line"><span class="cl">│  复杂概念查询            │  HyDE              │  假设文档捕获语义  │
+</span></span><span class="line"><span class="cl">│  多步骤问题              │  MQE + HyDE        │  组合拳效果最好    │
+</span></span><span class="line"><span class="cl">│  领域专业查询            │  基础 + 重排序      │  减少幻觉风险      │
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">└─────────────────────────────────────────────────────────────┘
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="实际场景效果对比">实际场景效果对比
+</h3><p><strong>场景：技术文档问答</strong></p>
+<p>查询：&ldquo;如何配置API密钥？&rdquo;</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>检索方法</th>
+          <th>召回结果</th>
+          <th>效果评估</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>基础检索</td>
+          <td>找到3个相关片段</td>
+          <td>遗漏了使用&quot;设置&rdquo;、&ldquo;凭证&quot;等同义词的文档</td>
+      </tr>
+      <tr>
+          <td>MQE</td>
+          <td>找到8个相关片段</td>
+          <td>✅ 召回率提升约150%</td>
+      </tr>
+      <tr>
+          <td>HyDE</td>
+          <td>找到5个相关片段</td>
+          <td>精确度更高，匹配到配置步骤详解</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="6-嵌入方案选型对比">6. 嵌入方案选型对比
+</h2><h3 id="三种方案全面对比">三种方案全面对比
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>百炼API</th>
+          <th>本地Transformer</th>
+          <th>TF-IDF</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>准确性</strong></td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td>⭐⭐⭐⭐</td>
+          <td>⭐⭐</td>
+      </tr>
+      <tr>
+          <td><strong>速度</strong></td>
+          <td>⭐⭐⭐ (网络延迟50-200ms)</td>
+          <td>⭐⭐⭐⭐ (GPU加速，&lt;50ms)</td>
+          <td>⭐⭐⭐⭐⭐ (&lt;10ms)</td>
+      </tr>
+      <tr>
+          <td><strong>成本</strong></td>
+          <td>按调用付费</td>
+          <td>硬件+电费</td>
+          <td>免费</td>
+      </tr>
+      <tr>
+          <td><strong>离线部署</strong></td>
+          <td>❌</td>
+          <td>✅</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td><strong>语言支持</strong></td>
+          <td>中英双语优秀</td>
+          <td>需选择合适模型</td>
+          <td>统计方法，无语义理解</td>
+      </tr>
+      <tr>
+          <td><strong>维护复杂度</strong></td>
+          <td>低</td>
+          <td>中(模型更新)</td>
+          <td>低</td>
+      </tr>
+      <tr>
+          <td><strong>可定制性</strong></td>
+          <td>低</td>
+          <td>高</td>
+          <td>中</td>
+      </tr>
+      <tr>
+          <td><strong>规模化成本</strong></td>
+          <td>随调用量线性增长</td>
+          <td>固定成本</td>
+          <td>几乎无成本</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="选型决策树">选型决策树
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">是否需要离线部署？
+</span></span><span class="line"><span class="cl">│
+</span></span><span class="line"><span class="cl">├── 是 → 是否有GPU资源？
+</span></span><span class="line"><span class="cl">│        │
+</span></span><span class="line"><span class="cl">│        ├── 是 → 本地Transformer (推荐)
+</span></span><span class="line"><span class="cl">│        └── 否 → TF-IDF (备用方案)
+</span></span><span class="line"><span class="cl">│
+</span></span><span class="line"><span class="cl">└── 否 → 是否有预算？
+</span></span><span class="line"><span class="cl">         │
+</span></span><span class="line"><span class="cl">         ├── 是 → 百炼API (推荐，准确性最高)
+</span></span><span class="line"><span class="cl">         │
+</span></span><span class="line"><span class="cl">         └── 否 → 考虑混合方案：
+</span></span><span class="line"><span class="cl">                  • 热数据用API (保证质量)
+</span></span><span class="line"><span class="cl">                  • 冷数据用本地 (降低成本)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="混合方案建议">混合方案建议
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">HybridEmbedding</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;混合嵌入方案：API + 本地兜底&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span> <span class="o">=</span> <span class="n">BailianEmbedding</span><span class="p">()</span>  <span class="c1"># 主力</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">local_model</span> <span class="o">=</span> <span class="n">LocalModel</span><span class="p">()</span>       <span class="c1"># 备用</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;智能路由编码请求&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># 正常情况下使用API</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># API失败时降级到本地模型</span>
+</span></span><span class="line"><span class="cl">            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;API failed, using local: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_model</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="7-智能遗忘策略实现">7. 智能遗忘策略实现
+</h2><h3 id="多因素加权遗忘算法">多因素加权遗忘算法
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">IntelligentForgetting</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;智能遗忘策略：综合多因素的遗忘决策&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="ow">or</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;importance&#39;</span><span class="p">:</span> <span class="mf">0.30</span><span class="p">,</span>    <span class="c1"># 重要性权重</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>     <span class="c1"># 访问频率权重</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;recency&#39;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>       <span class="c1"># 时间权重</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;connectivity&#39;</span><span class="p">:</span> <span class="mf">0.20</span>   <span class="c1"># 连接性权重</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">calculate_forgetting_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        计算遗忘分数：分数越高越应该遗忘
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">        返回: (forgetting_score, detail_scores)
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">scores</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;importance&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_importance_score</span><span class="p">(</span><span class="n">memory</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frequency_score</span><span class="p">(</span><span class="n">memory</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;recency&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recency_score</span><span class="p">(</span><span class="n">memory</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;connectivity&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connectivity_score</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 加权综合</span>
+</span></span><span class="line"><span class="cl">        <span class="n">forgetting_score</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">scores</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">scores</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">forgetting_score</span><span class="p">,</span> <span class="n">scores</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_importance_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        重要性转换为遗忘倾向（反向）
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">        重要性越高 → 遗忘倾向越低
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">original</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;importance&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">original</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_frequency_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        访问频率转换为遗忘倾向（反向）
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">        访问越多 + 距离上次访问越短 → 遗忘倾向越低
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">access_count</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;access_count&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">days_since_last</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;days_since_last_access&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 访问越多 → 遗忘倾向越低</span>
+</span></span><span class="line"><span class="cl">        <span class="n">frequency_factor</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">access_count</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 距上次访问越久 → 遗忘倾向越高</span>
+</span></span><span class="line"><span class="cl">        <span class="n">recency_penalty</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">days_since_last</span> <span class="o">*</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">frequency_factor</span> <span class="o">+</span> <span class="n">recency_penalty</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_recency_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        时间衰减：越旧越容易遗忘
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">        使用S曲线：刚开始遗忘慢，中间加速，后期趋缓
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">age_days</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;age_days&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Sigmoid函数</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span> <span class="o">*</span> <span class="p">(</span><span class="n">age_days</span> <span class="o">-</span> <span class="mi">60</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_connectivity_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        连接性：与其他记忆关联少 → 更容易遗忘
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">        在图数据库中查询相关节点数量
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">related_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_related_memory_count</span><span class="p">(</span><span class="n">memory</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">related_count</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="遗忘决策阈值">遗忘决策阈值
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># 遗忘阈值设定</span>
+</span></span><span class="line"><span class="cl"><span class="n">FORGETTING_THRESHOLDS</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;immediate&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>      <span class="c1"># 立即遗忘</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;gradual&#39;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">,</span>        <span class="c1"># 逐渐降低优先级</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;archive&#39;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>        <span class="c1"># 归档</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;keep&#39;</span><span class="p">:</span> <span class="mf">0.4</span>            <span class="c1"># 保留</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">decide_forget_action</span><span class="p">(</span><span class="n">memory</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;根据遗忘分数决定操作&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">score</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">forgetting</span><span class="o">.</span><span class="n">calculate_forgetting_score</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="n">FORGETTING_THRESHOLDS</span><span class="p">[</span><span class="s1">&#39;immediate&#39;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="s1">&#39;delete&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">elif</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="n">FORGETTING_THRESHOLDS</span><span class="p">[</span><span class="s1">&#39;gradual&#39;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="s1">&#39;deprioritize&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">elif</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="n">FORGETTING_THRESHOLDS</span><span class="p">[</span><span class="s1">&#39;archive&#39;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="s1">&#39;archive&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="s1">&#39;keep&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="8-记忆归档机制设计">8. 记忆归档机制设计
+</h2><h3 id="记忆生命周期管理">记忆生命周期管理
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">┌─────────────────────────────────────────────────────────────┐
+</span></span><span class="line"><span class="cl">│                    记忆生命周期管理                           │
+</span></span><span class="line"><span class="cl">├─────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">│  ┌─────────┐    迁移条件    ┌─────────┐    迁移条件    ┌───────┐│
+</span></span><span class="line"><span class="cl">│  │ 活跃记忆 │  ──────────&gt;  │  温记忆  │  ──────────&gt;  │ 冷存储 ││
+</span></span><span class="line"><span class="cl">│  │ Hot     │              │  Warm    │              │  Cold  ││
+</span></span><span class="line"><span class="cl">│  └─────────┘              └─────────┘              └───────┘│
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">│  特征：                    特征：                    特征：    │
+</span></span><span class="line"><span class="cl">│  • 频繁访问                • 偶尔访问                • 长期未访问│
+</span></span><span class="line"><span class="cl">│  • 高重要性                • 中重要性                • 可能有价值│
+</span></span><span class="line"><span class="cl">│  • 最近创建                • 中等时间                • 历史记录  │
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">│  迁移策略：                                                │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │  活跃 → 温：  7天无访问 + 重要性&lt;0.7                 │   │
+</span></span><span class="line"><span class="cl">│  │  温 → 冷：    30天无访问 + 累计访问&lt;3次                │   │
+</span></span><span class="line"><span class="cl">│  │  冷 → 删除：  90天无访问 + 重要性&lt;0.3                 │   │
+</span></span><span class="line"><span class="cl">│  │  冷 → 活跃：  被关联查询触发                          │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">│  存储优化：                                                │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │  活跃： Qdrant/Neo4j (热索引，毫秒级响应)              │   │
+</span></span><span class="line"><span class="cl">│  │  温：   压缩存储 + 定期重建索引                       │   │
+</span></span><span class="line"><span class="cl">│  │  冷：   对象存储(S3) + 元数据索引                     │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">└─────────────────────────────────────────────────────────────┘
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="归档实现示例">归档实现示例
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">MemoryArchiver</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;记忆归档管理器&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;hot&#39;</span><span class="p">:</span> <span class="n">HotStorage</span><span class="p">(),</span>      <span class="c1"># Qdrant + Neo4j</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;warm&#39;</span><span class="p">:</span> <span class="n">WarmStorage</span><span class="p">(),</span>    <span class="c1"># 压缩格式</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;cold&#39;</span><span class="p">:</span> <span class="n">ColdStorage</span><span class="p">()</span>     <span class="c1"># S3 + 元数据</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">evaluate_and_archive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memories</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;评估并执行归档&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">memory</span> <span class="ow">in</span> <span class="n">memories</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_tier</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">current_tier</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;storage_tier&#39;</span><span class="p">,</span> <span class="s1">&#39;hot&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">tier</span> <span class="o">!=</span> <span class="n">current_tier</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">_move_memory</span><span class="p">(</span><span class="n">memory</span><span class="p">,</span> <span class="n">current_tier</span><span class="p">,</span> <span class="n">tier</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_evaluate_tier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;评估记忆应处于的存储层级&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 计算访问热度</span>
+</span></span><span class="line"><span class="cl">        <span class="n">access_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_access_score</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 计算重要性</span>
+</span></span><span class="line"><span class="cl">        <span class="n">importance</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;importance&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">access_score</span> <span class="o">&gt;</span> <span class="mf">0.7</span> <span class="ow">and</span> <span class="n">importance</span> <span class="o">&gt;</span> <span class="mf">0.7</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="s1">&#39;hot&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">elif</span> <span class="n">access_score</span> <span class="o">&gt;</span> <span class="mf">0.3</span> <span class="ow">or</span> <span class="n">importance</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="s1">&#39;warm&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="s1">&#39;cold&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_calculate_access_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;计算访问热度分数&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 最近访问权重高</span>
+</span></span><span class="line"><span class="cl">        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">last_access</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;last_access&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">days_since</span> <span class="o">=</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">last_access</span><span class="p">)</span> <span class="o">/</span> <span class="mi">86400</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 指数衰减</span>
+</span></span><span class="line"><span class="cl">        <span class="n">time_factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">days_since</span> <span class="o">/</span> <span class="mi">7</span><span class="p">)</span>  <span class="c1"># 7天半衰期</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 访问次数</span>
+</span></span><span class="line"><span class="cl">        <span class="n">count_factor</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">memory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;access_count&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">(</span><span class="n">time_factor</span> <span class="o">*</span> <span class="mf">0.7</span> <span class="o">+</span> <span class="n">count_factor</span> <span class="o">*</span> <span class="mf">0.3</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="9-隐私数据彻底清除方案">9. 隐私数据彻底清除方案
+</h2><h3 id="多层验证清除机制">多层验证清除机制
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">┌─────────────────────────────────────────────────────────────┐
+</span></span><span class="line"><span class="cl">│              隐私数据清除的多层验证机制                       │
+</span></span><span class="line"><span class="cl">├─────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">│  第1层：应用层删除                                           │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │  DELETE FROM memories                                │   │
+</span></span><span class="line"><span class="cl">│  │  WHERE id = ? AND user_id = ?                        │   │
+</span></span><span class="line"><span class="cl">│  │  同时标记相关引用为&#34;待删除&#34;                            │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                         ↓                                   │
+</span></span><span class="line"><span class="cl">│  第2层：向量数据库清除 (Qdrant)                              │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │  qdrant_client.delete(                                │   │
+</span></span><span class="line"><span class="cl">│  │      collection_name=f&#34;user_{user_id}&#34;,              │   │
+</span></span><span class="line"><span class="cl">│  │      points_selector=[memory_id]                     │   │
+</span></span><span class="line"><span class="cl">│  │  )                                                    │   │
+</span></span><span class="line"><span class="cl">│  │  验证：retrieve(memory_id) 应返回空                  │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                         ↓                                   │
+</span></span><span class="line"><span class="cl">│  第3层：图数据库清除 (Neo4j)                                 │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │  MATCH (m:Memory {id: $id})                          │   │
+</span></span><span class="line"><span class="cl">│  │  DETACH DELETE m, m-[r]-()                            │   │
+</span></span><span class="line"><span class="cl">│  │  处理孤立节点                                         │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                         ↓                                   │
+</span></span><span class="line"><span class="cl">│  第4层：备份区清除                                          │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │  从归档存储删除                                     │   │
+</span></span><span class="line"><span class="cl">│  │  清除日志中的敏感信息                               │   │
+</span></span><span class="line"><span class="cl">│  │  清除缓存                                           │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                         ↓                                   │
+</span></span><span class="line"><span class="cl">│  第5层：验证确认                                            │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │  全域搜索验证                                         │   │
+</span></span><span class="line"><span class="cl">│  │  生成清除报告供审计                                   │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">└─────────────────────────────────────────────────────────────┘
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="实现代码">实现代码
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">PrivacyCleaner</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;隐私数据彻底清除&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qdrant_client</span><span class="p">,</span> <span class="n">neo4j_driver</span><span class="p">,</span> <span class="n">storage</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">qdrant</span> <span class="o">=</span> <span class="n">qdrant_client</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">neo4j</span> <span class="o">=</span> <span class="n">neo4j_driver</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">storage</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">delete_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;彻底删除记忆&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">deletion_report</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;memory_id&#39;</span><span class="p">:</span> <span class="n">memory_id</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 第1步：应用层删除</span>
+</span></span><span class="line"><span class="cl">        <span class="n">deletion_report</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_delete_from_app</span><span class="p">(</span><span class="n">memory_id</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 第2步：向量数据库删除</span>
+</span></span><span class="line"><span class="cl">        <span class="n">deletion_report</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_delete_from_qdrant</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 第3步：图数据库删除</span>
+</span></span><span class="line"><span class="cl">        <span class="n">deletion_report</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_delete_from_neo4j</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 第4步：存储删除</span>
+</span></span><span class="line"><span class="cl">        <span class="n">deletion_report</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_delete_from_storage</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 第5步：验证</span>
+</span></span><span class="line"><span class="cl">        <span class="n">deletion_report</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_verify_deletion</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">deletion_report</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_delete_from_qdrant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;从Qdrant删除向量&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">collection</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;user_</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">_vectors&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 删除向量点</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">qdrant</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">collection_name</span><span class="o">=</span><span class="n">collection</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">points_selector</span><span class="o">=</span><span class="p">[</span><span class="n">memory_id</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 验证删除</span>
+</span></span><span class="line"><span class="cl">        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qdrant</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">collection_name</span><span class="o">=</span><span class="n">collection</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="n">memory_id</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;step&#39;</span><span class="p">:</span> <span class="s1">&#39;qdrant&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;success&#39;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;step&#39;</span><span class="p">:</span> <span class="s1">&#39;qdrant&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;remains&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="10-rag-vs-memory-智能路由">10. RAG vs Memory 智能路由
+</h2><h3 id="智能路由机制">智能路由机制
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">RetrievalRouter</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;智能路由：自动选择最佳检索方式&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;根据查询特征决定检索策略&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 1. 分析查询类型</span>
+</span></span><span class="line"><span class="cl">        <span class="n">query_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classify_query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 2. 评估上下文</span>
+</span></span><span class="line"><span class="cl">        <span class="n">context_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_context</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 3. 路由决策</span>
+</span></span><span class="line"><span class="cl">        <span class="n">strategy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decide</span><span class="p">(</span><span class="n">query_type</span><span class="p">,</span> <span class="n">context_score</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">strategy</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_classify_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;查询分类&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">features</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;has_entity&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_named_entity</span><span class="p">(</span><span class="n">query</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;is_personal&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_personal_reference</span><span class="p">(</span><span class="n">query</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;is_factual&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_factual_query</span><span class="p">(</span><span class="n">query</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;temporal&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_temporal_aspect</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 决策树</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;is_personal&#39;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="s1">&#39;memory_primary&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">elif</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;has_entity&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;is_factual&#39;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="s1">&#39;rag_primary&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">elif</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;temporal&#39;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="s1">&#39;memory_primary&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="s1">&#39;hybrid&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_decide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_type</span><span class="p">,</span> <span class="n">context_score</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;路由决策表&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">decision_matrix</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="p">(</span><span class="s1">&#39;memory_primary&#39;</span><span class="p">,</span> <span class="s1">&#39;high&#39;</span><span class="p">):</span> <span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="s1">&#39;rag&#39;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">            <span class="p">(</span><span class="s1">&#39;memory_primary&#39;</span><span class="p">,</span> <span class="s1">&#39;low&#39;</span><span class="p">):</span> <span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">            <span class="p">(</span><span class="s1">&#39;rag_primary&#39;</span><span class="p">,</span> <span class="s1">&#39;any&#39;</span><span class="p">):</span> <span class="p">[</span><span class="s1">&#39;rag&#39;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">            <span class="p">(</span><span class="s1">&#39;hybrid&#39;</span><span class="p">,</span> <span class="s1">&#39;high&#39;</span><span class="p">):</span> <span class="p">[</span><span class="s1">&#39;rag&#39;</span><span class="p">,</span> <span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="s1">&#39;merge&#39;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">            <span class="p">(</span><span class="s1">&#39;hybrid&#39;</span><span class="p">,</span> <span class="s1">&#39;low&#39;</span><span class="p">):</span> <span class="p">[</span><span class="s1">&#39;rag&#39;</span><span class="p">,</span> <span class="s1">&#39;memory&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">decision_matrix</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">query_type</span><span class="p">,</span> <span class="n">context_score</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;rag&#39;</span><span class="p">])</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="路由决策表">路由决策表
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>查询类型</th>
+          <th>上下文丰富度</th>
+          <th>推荐策略</th>
+          <th>理由</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>&ldquo;我之前说过&hellip;&rdquo;</td>
+          <td>高</td>
+          <td>Memory → RAG</td>
+          <td>优先检索个人记忆</td>
+      </tr>
+      <tr>
+          <td>&ldquo;什么是Transformer?&rdquo;</td>
+          <td>任意</td>
+          <td>RAG</td>
+          <td>事实性查询</td>
+      </tr>
+      <tr>
+          <td>&ldquo;上周讨论了什么?&rdquo;</td>
+          <td>高</td>
+          <td>Memory</td>
+          <td>时间范围查询</td>
+      </tr>
+      <tr>
+          <td>&ldquo;深度学习原理是什么?&rdquo;</td>
+          <td>高</td>
+          <td>RAG + Memory</td>
+          <td>结合知识和记忆</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="11-智能学习报告生成器设计">11. 智能学习报告生成器设计
+</h2><h3 id="报告生成器架构">报告生成器架构
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">┌─────────────────────────────────────────────────────────────┐
+</span></span><span class="line"><span class="cl">│              智能学习报告生成器架构                            │
+</span></span><span class="line"><span class="cl">├─────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">│  输入：用户学习历史（问答记录、笔记、行为数据）                │
+</span></span><span class="line"><span class="cl">│                         ↓                                   │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │              分析引擎模块                              │   │
+</span></span><span class="line"><span class="cl">│  ├─────────────────────────────────────────────────────┤   │
+</span></span><span class="line"><span class="cl">│  │  1. 学习轨迹分析        (情景记忆 + 时间序列)         │   │
+</span></span><span class="line"><span class="cl">│  │  2. 知识图谱构建        (语义记忆 + 图推理)           │   │
+</span></span><span class="line"><span class="cl">│  │  3. 兴趣偏好识别        (访问频率 + 停留时间)         │   │
+</span></span><span class="line"><span class="cl">│  │  4. 学习风格检测        (问题类型 + 笔记模式)         │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                         ↓                                   │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │              知识盲点识别                              │   │
+</span></span><span class="line"><span class="cl">│  ├─────────────────────────────────────────────────────┤   │
+</span></span><span class="line"><span class="cl">│  │  • 未覆盖的知识领域      (文档覆盖 vs 学习覆盖)       │   │
+</span></span><span class="line"><span class="cl">│  │  • 浅度学习的内容        (单次访问 vs 深度交互)       │   │
+</span></span><span class="line"><span class="cl">│  │  • 遗忘的知识点          (学习后未复习)               │   │
+</span></span><span class="line"><span class="cl">│  │  • 误解的概念            (矛盾问答记录)               │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                         ↓                                   │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │              推荐引擎                                  │   │
+</span></span><span class="line"><span class="cl">│  ├─────────────────────────────────────────────────────┤   │
+</span></span><span class="line"><span class="cl">│  │  • 复习优先级排序        (遗忘曲线 + 重要性)         │   │
+</span></span><span class="line"><span class="cl">│  │  • 扩展学习建议          (知识图谱关联)               │   │
+</span></span><span class="line"><span class="cl">│  │  • 个性化学习路径        (学习风格匹配)               │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                         ↓                                   │
+</span></span><span class="line"><span class="cl">│  输出：结构化学习报告 + 可视化图表 + 行动建议                │
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">└─────────────────────────────────────────────────────────────┘
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="报告结构示例">报告结构示例
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;report_id&#34;</span><span class="p">:</span> <span class="s2">&#34;report_20240120_user123&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;generated_at&#34;</span><span class="p">:</span> <span class="s2">&#34;2024-01-20T10:30:00Z&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;summary&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;total_study_time&#34;</span><span class="p">:</span> <span class="s2">&#34;5.2小时&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;documents_studied&#34;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;questions_asked&#34;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;notes_created&#34;</span><span class="p">:</span> <span class="mi">8</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;learning_analysis&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;strengths&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;深度学习基础&#34;</span><span class="p">,</span> <span class="s2">&#34;Transformer架构&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;weaknesses&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;注意力机制细节&#34;</span><span class="p">,</span> <span class="s2">&#34;训练技巧&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;knowledge_graph&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;nodes&#34;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;edges&#34;</span><span class="p">:</span> <span class="mi">38</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;central_concepts&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;神经网络&#34;</span><span class="p">,</span> <span class="s2">&#34;反向传播&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;knowledge_gaps&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;topic&#34;</span><span class="p">:</span> <span class="s2">&#34;注意力机制&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;reason&#34;</span><span class="p">:</span> <span class="s2">&#34;从未提问过相关问题&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;priority&#34;</span><span class="p">:</span> <span class="s2">&#34;high&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;recommendation&#34;</span><span class="p">:</span> <span class="s2">&#34;建议学习：Self-Attention、Multi-Head Attention&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;review_suggestions&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;topic&#34;</span><span class="p">:</span> <span class="s2">&#34;Transformer架构&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;reason&#34;</span><span class="p">:</span> <span class="s2">&#34;3天前学习，未复习&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;urgency&#34;</span><span class="p">:</span> <span class="s2">&#34;medium&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;next_steps&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;深入理解注意力机制&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;学习BERT和GPT的区别&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;实践：实现一个简单的Transformer&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="12-多用户数据隔离方案">12. 多用户数据隔离方案
+</h2><h3 id="qdrant-隔离方案">Qdrant 隔离方案
+</h3><p><strong>方案1：独立Collection（推荐）</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># 每个用户独立的collection</span>
+</span></span><span class="line"><span class="cl"><span class="n">collection_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;user_</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">_vectors&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 优点：</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># - 完全隔离，安全</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># - 可独立删除</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># - 性能互不影响</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 缺点：</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># - Collection数量多时管理复杂</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>方案2：共享Collection + Payload过滤</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># 共享collection，通过payload过滤</span>
+</span></span><span class="line"><span class="cl"><span class="n">collection_name</span> <span class="o">=</span> <span class="s2">&#34;global_vectors&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 插入时添加用户标识</span>
+</span></span><span class="line"><span class="cl"><span class="n">point</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">doc_id</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vector&#34;</span><span class="p">:</span> <span class="n">embedding</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;payload&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;user_id&#34;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;document&#34;</span><span class="p">:</span> <span class="n">doc_name</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查询时过滤</span>
+</span></span><span class="line"><span class="cl"><span class="n">search_result</span> <span class="o">=</span> <span class="n">qdrant</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">collection_name</span><span class="o">=</span><span class="s2">&#34;global_vectors&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">query_vector</span><span class="o">=</span><span class="n">embedding</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">query_filter</span><span class="o">=</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;must&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span><span class="s2">&#34;key&#34;</span><span class="p">:</span> <span class="s2">&#34;user_id&#34;</span><span class="p">,</span> <span class="s2">&#34;match&#34;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&#34;value&#34;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">}}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="neo4j-隔离方案">Neo4j 隔离方案
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">-- 方案1：用户根节点（推荐）
+</span></span><span class="line"><span class="cl">MATCH (u:User {id: $user_id})-[:HAS_MEMORY]-&gt;(m:Memory)
+</span></span><span class="line"><span class="cl">RETURN m
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">-- 方案2：节点属性过滤
+</span></span><span class="line"><span class="cl">MATCH (m:Memory {user_id: $user_id})
+</span></span><span class="line"><span class="cl">RETURN m
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">-- 方案3：标签隔离
+</span></span><span class="line"><span class="cl">MATCH (m:Memory:User_123)
+</span></span><span class="line"><span class="cl">RETURN m
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="性能优化策略">性能优化策略
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>策略</th>
+          <th>实现方式</th>
+          <th>效果</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>索引优化</td>
+          <td><code>CREATE INDEX ON :Memory(user_id)</code></td>
+          <td>查询速度提升10x</td>
+      </tr>
+      <tr>
+          <td>分片策略</td>
+          <td>按user_id哈希分片</td>
+          <td>负载均衡</td>
+      </tr>
+      <tr>
+          <td>连接池</td>
+          <td>限制每用户并发数</td>
+          <td>防止资源耗尽</td>
+      </tr>
+      <tr>
+          <td>缓存层</td>
+          <td>Redis缓存热点用户session</td>
+          <td>减少数据库压力</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="13-知识图谱质量评估">13. 知识图谱质量评估
+</h2><h3 id="质量评估维度">质量评估维度
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">KnowledgeGraphQuality</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;知识图谱质量评估器&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;综合质量评分&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;completeness&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_completeness</span><span class="p">(</span><span class="n">graph</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;accuracy&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_accuracy</span><span class="p">(</span><span class="n">graph</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;consistency&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_consistency</span><span class="p">(</span><span class="n">graph</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;coverage&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_coverage</span><span class="p">(</span><span class="n">graph</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;overall&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_overall</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_check_completeness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;完整性检查&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">total_nodes</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">count_nodes</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">isolated_nodes</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">count_isolated_nodes</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">total_relationships</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">count_relationships</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 完整性指标</span>
+</span></span><span class="line"><span class="cl">        <span class="n">isolation_ratio</span> <span class="o">=</span> <span class="n">isolated_nodes</span> <span class="o">/</span> <span class="n">total_nodes</span> <span class="k">if</span> <span class="n">total_nodes</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="n">relationship_density</span> <span class="o">=</span> <span class="n">total_relationships</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">total_nodes</span> <span class="o">*</span> <span class="p">(</span><span class="n">total_nodes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;isolation_ratio&#39;</span><span class="p">:</span> <span class="n">isolation_ratio</span><span class="p">,</span>        <span class="c1"># 越低越好</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="n">relationship_density</span><span class="p">,</span>           <span class="c1"># 适度最佳</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">isolation_ratio</span> <span class="o">*</span> <span class="mf">0.5</span>         <span class="c1"># 转换为分数</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_check_accuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;准确性检查（需要样本验证）&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 实体类型一致性</span>
+</span></span><span class="line"><span class="cl">        <span class="n">entities</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">get_all_entities</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">type_conflicts</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">entities</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_type_conflict</span><span class="p">(</span><span class="n">entity</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">                <span class="n">type_conflicts</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 关系合理性</span>
+</span></span><span class="line"><span class="cl">        <span class="n">relationships</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">get_all_relationships</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">invalid_rels</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">rel</span> <span class="ow">in</span> <span class="n">relationships</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_valid_relation</span><span class="p">(</span><span class="n">rel</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">                <span class="n">invalid_rels</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;entity_consistency&#39;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">type_conflicts</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">entities</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;relation_validity&#39;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">invalid_rels</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">relationships</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="常见错误类型">常见错误类型
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>错误类型</th>
+          <th>检测方法</th>
+          <th>修正策略</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>实体边界错误</td>
+          <td>统计共现频率</td>
+          <td>重新分词</td>
+      </tr>
+      <tr>
+          <td>关系方向错误</td>
+          <td>传递性检查</td>
+          <td>反转关系</td>
+      </tr>
+      <tr>
+          <td>类型冲突</td>
+          <td>类型一致性验证</td>
+          <td>多类型标签</td>
+      </tr>
+      <tr>
+          <td>冗余关系</td>
+          <td>重复检测</td>
+          <td>关系合并</td>
+      </tr>
+      <tr>
+          <td>虚假关联</td>
+          <td>置信度阈值</td>
+          <td>过滤低置信度</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="14-图检索-vs-向量检索对比">14. 图检索 vs 向量检索对比
+</h2><h3 id="查询类型对比表">查询类型对比表
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>查询类型</th>
+          <th>向量检索</th>
+          <th>图检索</th>
+          <th>推荐方案</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>&ldquo;机器学习的定义&rdquo;</td>
+          <td>✅ 语义相似</td>
+          <td>❌ 无优势</td>
+          <td>向量</td>
+      </tr>
+      <tr>
+          <td>&ldquo;与Transformer相关的所有技术&rdquo;</td>
+          <td>⚠️ 召回有限</td>
+          <td>✅ 多跳关联</td>
+          <td>图</td>
+      </tr>
+      <tr>
+          <td>&ldquo;A如何影响B&rdquo;</td>
+          <td>❌ 无法判断</td>
+          <td>✅ 路径查找</td>
+          <td>图</td>
+      </tr>
+      <tr>
+          <td>&ldquo;与X类似的概念&rdquo;</td>
+          <td>✅ 语义相似</td>
+          <td>⚠️ 需要同类型</td>
+          <td>向量</td>
+      </tr>
+      <tr>
+          <td>&ldquo;X在知识体系中的位置&rdquo;</td>
+          <td>❌ 无结构信息</td>
+          <td>✅ 层级结构</td>
+          <td>图</td>
+      </tr>
+      <tr>
+          <td>&ldquo;我学过哪些相关内容&rdquo;</td>
+          <td>⚠️ 语义匹配</td>
+          <td>✅ 关联遍历</td>
+          <td>图</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="混合检索示例">混合检索示例
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">// 查询：找出所有与&#34;Transformer&#34;相关的技术，并按关联强度排序
+</span></span><span class="line"><span class="cl">MATCH path = (t:Concept {name: &#34;Transformer&#34;})-[:RELATED_TO*1..3]-(related:Concept)
+</span></span><span class="line"><span class="cl">WHERE related.category = &#34;技术&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">// 同时考虑向量相似度（通过预计算）
+</span></span><span class="line"><span class="cl">WITH related,
+</span></span><span class="line"><span class="cl">     apoc.cypher.run(
+</span></span><span class="line"><span class="cl">         &#39;CALL db.index.vector.queryNodes(&#34;embedding_index&#34;, 10, $embedding)
+</span></span><span class="line"><span class="cl">          YIELD node, score RETURN node.name AS name, score&#39;,
+</span></span><span class="line"><span class="cl">         {embedding: $query_embedding}
+</span></span><span class="line"><span class="cl">     ) AS vector_result
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">// 合并图检索和向量检索分数
+</span></span><span class="line"><span class="cl">MATCH (related)
+</span></span><span class="line"><span class="cl">WHERE related.name IN vector_result.name
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">RETURN related.name,
+</span></span><span class="line"><span class="cl">       sum(r.weight) as graph_score,
+</span></span><span class="line"><span class="cl">       vector_result.score as vector_score,
+</span></span><span class="line"><span class="cl">       (graph_score * 0.6 + vector_score * 0.4) as combined_score
+</span></span><span class="line"><span class="cl">ORDER BY combined_score DESC
+</span></span><span class="line"><span class="cl">LIMIT 10
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="图检索优势场景">图检索优势场景
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">┌─────────────────────────────────────────────────────────────┐
+</span></span><span class="line"><span class="cl">│                  图检索优势场景示例                           │
+</span></span><span class="line"><span class="cl">├─────────────────────────────────────────────────────────────┤
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">│  场景1：关系推理                                            │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │  问题：&#34;A如何影响B？&#34;                                │   │
+</span></span><span class="line"><span class="cl">│  │  图检索：FIND PATH A-&gt;...-&gt;B                         │   │
+</span></span><span class="line"><span class="cl">│  │  向量检索：无法理解&#34;影响&#34;关系                         │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">│  场景2：层级遍历                                            │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │  问题：&#34;列出所有机器学习的子领域&#34;                    │   │
+</span></span><span class="line"><span class="cl">│  │  图检索：MATCH (p:Concept)-[:SUBTYPE*]-&gt;(c)         │   │
+</span></span><span class="line"><span class="cl">│  │  向量检索：只能找到语义相似的概念                     │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">│  场景3：社区发现                                            │
+</span></span><span class="line"><span class="cl">│  ┌─────────────────────────────────────────────────────┐   │
+</span></span><span class="line"><span class="cl">│  │  问题：&#34;找出所有相互关联的概念群&#34;                    │   │
+</span></span><span class="line"><span class="cl">│  │  图检索：社区检测算法                                 │   │
+</span></span><span class="line"><span class="cl">│  │  向量检索：需要先聚类再分析                           │   │
+</span></span><span class="line"><span class="cl">│  └─────────────────────────────────────────────────────┘   │
+</span></span><span class="line"><span class="cl">│                                                             │
+</span></span><span class="line"><span class="cl">└─────────────────────────────────────────────────────────────┘
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="总结">总结
+</h2><p>本解答涵盖了智能体记忆系统和RAG系统的核心设计理念：</p>
+<ol>
+<li><strong>记忆类型设计</strong>需要理解每种记忆的本质特征</li>
+<li><strong>RAG系统优化</strong>需要在召回率、精确度、效率之间权衡</li>
+<li><strong>工程实践</strong>需要考虑隐私、性能、可扩展性</li>
+<li><strong>多用户场景</strong>需要仔细设计数据隔离方案</li>
+<li><strong>质量保证</strong>需要建立评估和验证机制</li>
+</ol>
+<p>这些设计原则不仅适用于学习助手，也适用于其他智能体应用场景，如个人助手、知识管理、教育培训等。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/agent/">Agent</a>
+        
+            <a href="/tags/ai/">AI</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/agent-05-low-code-agent/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Agent 05-基于低代码平台构建智能体</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/agent-04-agent-classic-paradigm/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Agent 04-智能体经典范式构建</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/agent-03-agent-language-basics/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Agent 03-大模型语言基础</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/agent-02-agent-develop/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Agent 02-智能体发展史</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/agent-01-initial-agent/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Agent 01-初识智能体</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 impself小破站
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.34.1">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+    
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.c922af694cc257bf1ecc41c0dd7b0430f9114ec280ccf67cd2c6ad55f5316c4e.js" defer></script><script type="text/javascript" src="/ts/custom.5d820af14e5a5809f83a09b219bc3d8a7224a84b6bc755db35ce533b714cac35.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

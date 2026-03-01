@@ -3,27 +3,51 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://impself.github.io/</loc>
-    <lastmod>2026-02-18T13:24:09+08:00</lastmod>
+    <lastmod>2026-03-01T00:11:09+08:00</lastmod>
   </url><url>
-    <loc>https://impself.github.io/tags/agent/</loc>
-    <lastmod>2026-02-18T13:24:09+08:00</lastmod>
-  </url><url>
-    <loc>https://impself.github.io/p/agent-04-agent-classic-paradigm/</loc>
-    <lastmod>2026-02-18T13:24:09+08:00</lastmod>
-  </url><url>
-    <loc>https://impself.github.io/categories/agent-dev/</loc>
-    <lastmod>2026-02-18T13:24:09+08:00</lastmod>
-  </url><url>
-    <loc>https://impself.github.io/tags/ai/</loc>
-    <lastmod>2026-02-18T13:24:09+08:00</lastmod>
+    <loc>https://impself.github.io/tags/backend/</loc>
+    <lastmod>2026-03-01T00:11:09+08:00</lastmod>
   </url><url>
     <loc>https://impself.github.io/categories/</loc>
-    <lastmod>2026-02-18T13:24:09+08:00</lastmod>
+    <lastmod>2026-03-01T00:11:09+08:00</lastmod>
+  </url><url>
+    <loc>https://impself.github.io/tags/mysql/</loc>
+    <lastmod>2026-03-01T00:11:09+08:00</lastmod>
   </url><url>
     <loc>https://impself.github.io/post/</loc>
-    <lastmod>2026-02-18T13:24:09+08:00</lastmod>
+    <lastmod>2026-03-01T00:11:09+08:00</lastmod>
+  </url><url>
+    <loc>https://impself.github.io/p/sql01-select-statement/</loc>
+    <lastmod>2026-03-01T00:11:09+08:00</lastmod>
   </url><url>
     <loc>https://impself.github.io/tags/</loc>
+    <lastmod>2026-03-01T00:11:09+08:00</lastmod>
+  </url><url>
+    <loc>https://impself.github.io/categories/database/</loc>
+    <lastmod>2026-03-01T00:11:09+08:00</lastmod>
+  </url><url>
+    <loc>https://impself.github.io/tags/sql/</loc>
+    <lastmod>2026-03-01T00:09:09+08:00</lastmod>
+  </url><url>
+    <loc>https://impself.github.io/p/sql02-join/</loc>
+    <lastmod>2026-03-01T00:09:09+08:00</lastmod>
+  </url><url>
+    <loc>https://impself.github.io/tags/agent/</loc>
+    <lastmod>2026-02-26T21:42:09+08:00</lastmod>
+  </url><url>
+    <loc>https://impself.github.io/p/agent-08-memory-and-retrieval/</loc>
+    <lastmod>2026-02-26T21:42:09+08:00</lastmod>
+  </url><url>
+    <loc>https://impself.github.io/categories/agent-dev/</loc>
+    <lastmod>2026-02-26T21:42:09+08:00</lastmod>
+  </url><url>
+    <loc>https://impself.github.io/tags/ai/</loc>
+    <lastmod>2026-02-26T21:42:09+08:00</lastmod>
+  </url><url>
+    <loc>https://impself.github.io/p/agent-05-low-code-agent/</loc>
+    <lastmod>2026-02-18T16:05:09+08:00</lastmod>
+  </url><url>
+    <loc>https://impself.github.io/p/agent-04-agent-classic-paradigm/</loc>
     <lastmod>2026-02-18T13:24:09+08:00</lastmod>
   </url><url>
     <loc>https://impself.github.io/p/agent-03-agent-language-basics/</loc>
